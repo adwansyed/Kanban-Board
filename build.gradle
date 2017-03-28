@@ -24,3 +24,11 @@ repositories {
 dependencies {
     testCompile group: 'junit', name: 'junit', version: '4.11'
 }
+
+jar {
+    manifest {
+        attributes  'Main-Class': 'project.Main',
+                'Implementation-Title': 'Sample-Gradle',
+                'Implementation-Version': version
+    }
+}
