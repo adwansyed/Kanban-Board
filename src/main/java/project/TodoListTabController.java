@@ -58,7 +58,7 @@ public class TodoListTabController {
             draggingButton = button ;
         });
         button.setOnDragDone(e -> draggingButton = null);
-        button.setOnAction(event -> System.out.println("Hi you pressed me"));
+        button.setOnAction(event -> mPane.getChildren().remove(0,1));
         return button ;
     }
 
