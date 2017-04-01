@@ -31,10 +31,10 @@ public class TodoListTabController {
         mPane.getChildren().add(createButton("task1"));
         mPane.getChildren().add(createButton("task2"));
         mPane.getChildren().add(createButton("task3"));
-        tPane.getChildren().add(createButton("hello1"));
-        tPane.getChildren().add(createButton("hello1"));
-        tPane.getChildren().add(createButton("hello1"));
-        tPane.getChildren().add(createButton("hello1"));
+        tPane.getChildren().add(createBlueButton("hello1"));
+        tPane.getChildren().add(createBlueButton("hello1"));
+        tPane.getChildren().add(createBlueButton("hello1"));
+        tPane.getChildren().add(createBlueButton("hello1"));
         addDropHandling(mPane);
         addDropHandling(tPane);
         addDropHandling(wPane);
@@ -48,6 +48,24 @@ public class TodoListTabController {
     private Button createButton(String text) {
         Button button = new Button(text);
         button.setStyle("-fx-background-color: seagreen; -fx-text-fill: white");
+        button.setMinWidth(120);
+        button.setOnDragDetected(e -> {
+            Dragboard db = button.startDragAndDrop(TransferMode.MOVE);
+            db.setDragView(button.snapshot(null, null));
+            ClipboardContent cc = new ClipboardContent();
+            cc.put(buttonFormat, "button");
+            db.setContent(cc);
+            draggingButton = button ;
+        });
+        button.setOnDragDone(e -> draggingButton = null);
+        button.setOnAction(event -> System.out.println("Hi you pressed me"));
+        return button ;
+    }
+
+    private Button createBlueButton(String text) {
+        Button button = new Button(text);
+        button.setStyle("-fx-background-color: blue; -fx-text-fill: white");
+        button.setMinWidth(120);
         button.setOnDragDetected(e -> {
             Dragboard db = button.startDragAndDrop(TransferMode.MOVE);
             db.setDragView(button.snapshot(null, null));
