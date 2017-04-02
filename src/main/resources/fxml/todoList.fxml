@@ -27,9 +27,9 @@
                   <Label layoutX="292.0" layoutY="54.0" text="Wednesday" />
                   <Label layoutX="422.0" layoutY="54.0" text="Thursday" />
                   <Label layoutX="557.0" layoutY="54.0" text="Friday" />
-                  <Label layoutX="680.0" layoutY="54.0" text="Saturday" />
-                  <Label layoutX="813.0" layoutY="54.0" text="Sunday" />
-                        <Button fx:id="mButton" layoutX="45.0" layoutY="21.0" mnemonicParsing="false" styleClass="addButton" text="Add">
+                  <Label layoutX="675.0" layoutY="54.0" text="Saturday" />
+                  <Label layoutX="808.0" layoutY="54.0" text="Sunday" />
+                        <Button fx:id="mButton" layoutX="45.0" layoutY="21.0" mnemonicParsing="false" onAction="#addToMonday" styleClass="addButton" text="Add">
                           <!--  <graphic>
                                 <ImageView fitHeight="30.0" fitWidth="30.0" pickOnBounds="true" preserveRatio="true">
                                     <image>
@@ -38,12 +38,12 @@
                                 </ImageView>
                             </graphic> -->
                         </Button>
-                  <Button fx:id="tButton" layoutX="171.0" layoutY="21.0" mnemonicParsing="false" text="Add" />
-                  <Button fx:id="wButton" layoutX="304.0" layoutY="21.0" mnemonicParsing="false" text="Add" />
-                  <Button fx:id="thButton" layoutX="428.0" layoutY="21.0" mnemonicParsing="false" text="Add" />
-                  <Button fx:id="fButton" layoutX="553.0" layoutY="21.0" mnemonicParsing="false" text="Add" />
-                  <Button fx:id="satButton" layoutX="683.0" layoutY="21.0" mnemonicParsing="false" text="Add" />
-                  <Button fx:id="sunButton" layoutX="812.0" layoutY="21.0" mnemonicParsing="false" text="Add" />
+                  <Button fx:id="tButton" layoutX="171.0" layoutY="21.0" mnemonicParsing="false" onAction="#addToTuesday" text="Add" />
+                  <Button fx:id="wButton" layoutX="304.0" layoutY="21.0" mnemonicParsing="false" onAction="#addToWednesday" text="Add" />
+                  <Button fx:id="thButton" layoutX="428.0" layoutY="21.0" mnemonicParsing="false" onAction="#addToThursday" text="Add" />
+                  <Button fx:id="fButton" layoutX="553.0" layoutY="21.0" mnemonicParsing="false" onAction="#addToFriday" text="Add" />
+                  <Button fx:id="satButton" layoutX="678.0" layoutY="21.0" mnemonicParsing="false" onAction="#addToSaturday" text="Add" />
+                  <Button fx:id="sunButton" layoutX="807.0" layoutY="21.0" mnemonicParsing="false" onAction="#addToSunday" text="Add" />
                     </children></AnchorPane>
                 <SplitPane dividerPositions="0.1428, 0.2856, 0.4284, 0.5713, 0.7141, 0.8569">
                     <items>

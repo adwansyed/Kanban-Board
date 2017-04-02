@@ -20,23 +20,12 @@ public class TodoListTabController {
 
     private final DataFormat buttonFormat = new DataFormat(" ");
     @FXML
-    private AnchorPane textField;
-
-    @FXML
-    private Button testButton, draggingButton;
+    private Button draggingButton;
 
     @FXML
     private FlowPane mPane, tPane, wPane, thPane, fPane, satPane, sunPane;
 
-    @FXML
-    void testAction(ActionEvent event) {
-        mPane.getChildren().add(createButton("task1"));
-        mPane.getChildren().add(createButton("task2"));
-        mPane.getChildren().add(createButton("task3"));
-        tPane.getChildren().add(createBlueButton("hello1"));
-        tPane.getChildren().add(createBlueButton("hello1"));
-        tPane.getChildren().add(createBlueButton("hello1"));
-        tPane.getChildren().add(createBlueButton("hello1"));
+    public void initialize(){
         addDropHandling(mPane);
         addDropHandling(tPane);
         addDropHandling(wPane);
@@ -44,10 +33,56 @@ public class TodoListTabController {
         addDropHandling(fPane);
         addDropHandling(satPane);
         addDropHandling(sunPane);
+    }
+
+    @FXML
+    void testAction(ActionEvent event) {
+
+        mPane.getChildren().add(createButton("task2"));
+        mPane.getChildren().add(createButton("task3"));
+        tPane.getChildren().add(createBlueButton("hello1"));
+        tPane.getChildren().add(createBlueButton("hello1"));
+        tPane.getChildren().add(createBlueButton("hello1"));
+        tPane.getChildren().add(createBlueButton("hello1"));
         for (Node component : mPane.getChildren()){
             System.out.println(component.toString());
         }
 
+    }
+
+    @FXML
+    void addToFriday(ActionEvent event) {
+        fPane.getChildren().add(createButton("Friday"));
+    }
+
+    @FXML
+    void addToMonday(ActionEvent event) {
+        mPane.getChildren().add(createButton("Monday"));
+    }
+
+    @FXML
+    void addToSaturday(ActionEvent event) {
+        satPane.getChildren().add(createButton("Saturday"));
+    }
+
+    @FXML
+    void addToSunday(ActionEvent event) {
+        sunPane.getChildren().add(createButton("Sunday"));
+    }
+
+    @FXML
+    void addToThursday(ActionEvent event) {
+        satPane.getChildren().add(createBlueButton("Thursday"));
+    }
+
+    @FXML
+    void addToTuesday(ActionEvent event) {
+        tPane.getChildren().add(createBlueButton("Tuesday"));
+    }
+
+    @FXML
+    void addToWednesday(ActionEvent event) {
+        wPane.getChildren().add(createBlueButton("Wednesday"));
     }
 
     private Button createButton(String text) {
