@@ -2,6 +2,7 @@ package project;
 
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
+import javafx.scene.Node;
 import javafx.scene.control.Button;
 import javafx.scene.input.ClipboardContent;
 import javafx.scene.input.DataFormat;
@@ -10,6 +11,7 @@ import javafx.scene.input.TransferMode;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.FlowPane;
 import javafx.scene.layout.Pane;
+import javafx.scene.shape.Circle;
 
 /**
  * Created by 100525709 on 3/14/2017.
@@ -42,13 +44,19 @@ public class TodoListTabController {
         addDropHandling(fPane);
         addDropHandling(satPane);
         addDropHandling(sunPane);
+        for (Node component : mPane.getChildren()){
+            System.out.println(component.toString());
+        }
 
     }
 
     private Button createButton(String text) {
         Button button = new Button(text);
         button.setStyle("-fx-background-color: seagreen; -fx-text-fill: white");
-        button.setMinWidth(120);
+        button.setShape(new Circle(30));
+        button.setMinSize(60,60);
+        button.setMaxSize(60,60);
+        //button.setMinWidth(120);
         button.setOnDragDetected(e -> {
             Dragboard db = button.startDragAndDrop(TransferMode.MOVE);
             db.setDragView(button.snapshot(null, null));
