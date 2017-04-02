@@ -36,22 +36,22 @@
             <children>
                 <TabPane styleClass="tab" prefHeight="600" prefWidth="900" side="LEFT" tabClosingPolicy="UNAVAILABLE">
                     <tabs>
-                        <Tab text="Dashboard">
+                        <Tab styleClass="dashboardTab" text="Dash">
                             <content>
                                 <fx:include fx:id="dashboardTab" source="dashboard.fxml" />
                             </content>
                         </Tab>
-                        <Tab text="To-do List">
+                        <Tab styleClass="todoListTab" text="To-do List">
                             <content>
                                 <fx:include fx:id="todoListTab" source="todoList.fxml" />
                             </content>
                         </Tab>
-                        <Tab text="Calendar" >
+                        <Tab styleClass="calendarTab" text="Calendar" >
                             <content>
                                 <fx:include fx:id="calendarTab" source="calendar.fxml" />
                             </content>
                         </Tab>
-                        <Tab text="Grades">
+                        <Tab styleClass="gradesTab" text="Grades">
                             <content>
                                 <fx:include fx:id="gradesCalculatorTab" source="gradeCalculator.fxml" />
                             </content>

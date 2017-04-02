@@ -1,10 +1,21 @@
 .menu-bar{
     -fx-background-color: white;
 }
-/*.tab *.tab-label {
-    -fx-rotate: 90;
+.tab *.tab-label {
+    -fx-text-fill: white;
+    -fx-font-weight: bold;
 }
 
-.tab {
-    -fx-padding: 3em 0.5em 3em 0.5em;
-}*/
+.dashboardTab{
+    -fx-background-color: #fad002;
+ }
+
+.todoListTab{
+    -fx-background-color: #00ba63;
+}
+.calendarTab{
+    -fx-background-color: #ed0e00;
+}
+.gradesTab{
+    -fx-background-color: #0391c1;
+}
