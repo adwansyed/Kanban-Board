@@ -10,13 +10,14 @@ repositories {
 
 dependencies {
     testCompile group: 'junit', name: 'junit', version: '4.11'
+    //compile group: 'org.json', name: 'json', version: '20151123'
 }
 
 jar {
     manifest {
         attributes  'Main-Class': 'project.Main',
-                'Implementation-Title': 'Sample-Gradle',
-                'Implementation-Version': version
+                    'Implementation-Title': 'Sample-Gradle',
+                    'Implementation-Version': version
     }
 }
 
