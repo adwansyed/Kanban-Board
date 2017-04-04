@@ -13,6 +13,7 @@ public class Main extends Application {
 
     @Override
     public void start(Stage primaryStage) throws Exception{
+        //call splash
         IntroSplash splash = new IntroSplash(5000);
         splash.showSplash();
         Parent root = FXMLLoader.load(getClass().getResource("/fxml/main.fxml"));
@@ -23,10 +24,6 @@ public class Main extends Application {
 
 
     public static void main(String[] args) {
-
         launch(args);
-
-
-
     }
 }
