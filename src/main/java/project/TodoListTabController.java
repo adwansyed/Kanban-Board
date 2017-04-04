@@ -129,6 +129,7 @@ public class TodoListTabController {
             db.setContent(cc);
             draggingButton = button ;
         });
+        updateCSV();
         button.setOnDragDone(e -> draggingButton = null);
         button.setOnMouseClicked(new EventHandler<MouseEvent>() {
             @Override
@@ -136,10 +137,10 @@ public class TodoListTabController {
                 if (event.getButton() == MouseButton.SECONDARY){
                     String buttonName = button.getText();
                     String paneID = button.getParent().getId();
-                    System.out.println(paneID);
+                    /*System.out.println(paneID);
                     System.out.println(buttonName);
                     System.out.println(button.getLayoutBounds());
-                    System.out.println(button.getBoundsInLocal());
+                    System.out.println(button.getBoundsInLocal());*/
                     if (paneID == mPane.getId()){ mPane.getChildren().remove(button);}
                     if (paneID == tPane.getId()){ tPane.getChildren().remove(button);}
                     if (paneID == wPane.getId()){ wPane.getChildren().remove(button);}
@@ -148,10 +149,22 @@ public class TodoListTabController {
                     if (paneID == satPane.getId()){ satPane.getChildren().remove(button);}
                     if (paneID == sunPane.getId()){ sunPane.getChildren().remove(button);}
                     //TODO: updateCSV
+                    updateCSV();
                 }
             }
         });
         return button ;
+    }
+
+    private void updateCSV() {
+        String COMMA_DELIMITER = ",";
+        String NEW_LINE_SEPARATOR = "\n";
+        String FILE_HEADER = "TASK,COLOR,DAY";
+
+      /* for (javafx.scene.Node component : mPane.getChildren()){
+            System.out.println(component.toString());
+        }*/
+
     }
 
     private void addDropHandling(Pane pane) {
