@@ -2,13 +2,11 @@ package project;
 
 import javafx.application.Platform;
 import javafx.event.ActionEvent;
+import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.geometry.Insets;
 import javafx.scene.control.*;
-import javafx.scene.input.ClipboardContent;
-import javafx.scene.input.DataFormat;
-import javafx.scene.input.Dragboard;
-import javafx.scene.input.TransferMode;
+import javafx.scene.input.*;
 import javafx.scene.layout.FlowPane;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.Pane;
@@ -52,7 +50,7 @@ public class TodoListTabController {
         return (int) (d * 255);
     }
 
-    private void addDialog() {
+    private void addDialog(Pane pane) {
         Dialog<Pair<String, String>> addDialog = new Dialog<>();
         addDialog.setTitle("Add Task");
         addDialog.setHeaderText("Enter your task");
@@ -85,49 +83,42 @@ public class TodoListTabController {
         Optional<Pair<String,String>> result = addDialog.showAndWait();
         result.ifPresent(taskName -> {
             String colour = toRgbString(cp.getValue());
-            mPane.getChildren().add(createButton(task.getText(),colour));
+            pane.getChildren().add(createButton(task.getText(),colour));
         });
     }
 
     @FXML
     void addToMonday(ActionEvent event) {
-        //TODO: Open Dialog
-        addDialog();
-        //TODO: AppendtoCSV
-        /*for (Node component : mPane.getChildren()){
-            System.out.println(component.toString());
-        }*/
+        addDialog(mPane);
     }
-
-
-
     @FXML
     void addToTuesday(ActionEvent event) {
-
+        addDialog(tPane);
     }
     @FXML
     void addToWednesday(ActionEvent event) {
-
+        addDialog(wPane);
     }
     @FXML
     void addToThursday(ActionEvent event) {
-
+        addDialog(thPane);
     }
     @FXML
     void addToFriday(ActionEvent event){
+        addDialog(fPane);
     }
     @FXML
     void addToSaturday(ActionEvent event) {
-
+        addDialog(satPane);
     }
     @FXML
     void addToSunday(ActionEvent event) {
-
+        addDialog(sunPane);
     }
 
     private Button createButton(String text, String c) {
         Button button = new Button(text);
-
+        //TODO: AppendtoCSV
         button.setStyle("-fx-background-color: "+ c +" ; -fx-text-fill: black;" + "-fx-font-weight: bold;");
         button.setMinWidth(120);
         button.setOnDragDetected(e -> {
@@ -139,7 +130,27 @@ public class TodoListTabController {
             draggingButton = button ;
         });
         button.setOnDragDone(e -> draggingButton = null);
-        button.setOnAction(event -> mPane.getChildren().remove(0,1));
+        button.setOnMouseClicked(new EventHandler<MouseEvent>() {
+            @Override
+            public void handle(MouseEvent event) {
+                if (event.getButton() == MouseButton.SECONDARY){
+                    String buttonName = button.getText();
+                    String paneID = button.getParent().getId();
+                    System.out.println(paneID);
+                    System.out.println(buttonName);
+                    System.out.println(button.getLayoutBounds());
+                    System.out.println(button.getBoundsInLocal());
+                    if (paneID == mPane.getId()){ mPane.getChildren().remove(button);}
+                    if (paneID == tPane.getId()){ tPane.getChildren().remove(button);}
+                    if (paneID == wPane.getId()){ wPane.getChildren().remove(button);}
+                    if (paneID == thPane.getId()){ thPane.getChildren().remove(button);}
+                    if (paneID == fPane.getId()){ fPane.getChildren().remove(button);}
+                    if (paneID == satPane.getId()){ satPane.getChildren().remove(button);}
+                    if (paneID == sunPane.getId()){ sunPane.getChildren().remove(button);}
+                    //TODO: updateCSV
+                }
+            }
+        });
         return button ;
     }
 
