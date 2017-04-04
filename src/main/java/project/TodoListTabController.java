@@ -13,6 +13,9 @@ import javafx.scene.layout.Pane;
 import javafx.scene.paint.Color;
 import javafx.util.Pair;
 
+import java.io.File;
+import java.io.FileWriter;
+import java.io.IOException;
 import java.util.Optional;
 
 /**
@@ -23,6 +26,8 @@ public class TodoListTabController {
     private final DataFormat buttonFormat = new DataFormat(" ");
     @FXML private Button draggingButton;
     @FXML private FlowPane mPane, tPane, wPane, thPane, fPane, satPane, sunPane;
+    public File todoListFile = new File("src/main/resources/data/todoListData.csv");
+    public String csvFile = todoListFile.getAbsolutePath();
 
     public void initialize(){
 
@@ -50,7 +55,7 @@ public class TodoListTabController {
         return (int) (d * 255);
     }
 
-    private void addDialog(Pane pane) {
+    private void addDialog(Pane pane, String day) {
         Dialog<Pair<String, String>> addDialog = new Dialog<>();
         addDialog.setTitle("Add Task");
         addDialog.setHeaderText("Enter your task");
@@ -83,42 +88,48 @@ public class TodoListTabController {
         Optional<Pair<String,String>> result = addDialog.showAndWait();
         result.ifPresent(taskName -> {
             String colour = toRgbString(cp.getValue());
-            pane.getChildren().add(createButton(task.getText(),colour));
+            pane.getChildren().add(createButton(task.getText(),colour, day));
         });
     }
 
     @FXML
     void addToMonday(ActionEvent event) {
-        addDialog(mPane);
+        String day = "Monday";
+        addDialog(mPane, day);
     }
     @FXML
     void addToTuesday(ActionEvent event) {
-        addDialog(tPane);
+        String day = "Tuesday";
+        addDialog(tPane, day);
     }
     @FXML
     void addToWednesday(ActionEvent event) {
-        addDialog(wPane);
+        String day = "Wednesday";
+        addDialog(wPane, day);
     }
     @FXML
     void addToThursday(ActionEvent event) {
-        addDialog(thPane);
+        String day = "Thursday";
+        addDialog(thPane, day);
     }
     @FXML
     void addToFriday(ActionEvent event){
-        addDialog(fPane);
+        String day = "Friday";
+        addDialog(fPane, day);
     }
     @FXML
     void addToSaturday(ActionEvent event) {
-        addDialog(satPane);
+        String day = "Saturday";
+        addDialog(satPane, day);
     }
     @FXML
     void addToSunday(ActionEvent event) {
-        addDialog(sunPane);
+        String day = "Sunday";
+        addDialog(sunPane, day);
     }
 
-    private Button createButton(String text, String c) {
+    private Button createButton(String text, String c, String day) {
         Button button = new Button(text);
-        //TODO: AppendtoCSV
         button.setStyle("-fx-background-color: "+ c +" ; -fx-text-fill: black;" + "-fx-font-weight: bold;");
         button.setMinWidth(120);
         button.setOnDragDetected(e -> {
@@ -129,18 +140,12 @@ public class TodoListTabController {
             db.setContent(cc);
             draggingButton = button ;
         });
-        updateCSV();
         button.setOnDragDone(e -> draggingButton = null);
         button.setOnMouseClicked(new EventHandler<MouseEvent>() {
             @Override
             public void handle(MouseEvent event) {
                 if (event.getButton() == MouseButton.SECONDARY){
-                    String buttonName = button.getText();
                     String paneID = button.getParent().getId();
-                    /*System.out.println(paneID);
-                    System.out.println(buttonName);
-                    System.out.println(button.getLayoutBounds());
-                    System.out.println(button.getBoundsInLocal());*/
                     if (paneID == mPane.getId()){ mPane.getChildren().remove(button);}
                     if (paneID == tPane.getId()){ tPane.getChildren().remove(button);}
                     if (paneID == wPane.getId()){ wPane.getChildren().remove(button);}
@@ -149,21 +154,28 @@ public class TodoListTabController {
                     if (paneID == satPane.getId()){ satPane.getChildren().remove(button);}
                     if (paneID == sunPane.getId()){ sunPane.getChildren().remove(button);}
                     //TODO: updateCSV
-                    updateCSV();
                 }
             }
         });
+        appendToCSV(text, c, day);
         return button ;
     }
 
-    private void updateCSV() {
+    private void appendToCSV(String text, String c, String p) {
         String COMMA_DELIMITER = ",";
         String NEW_LINE_SEPARATOR = "\n";
-        String FILE_HEADER = "TASK,COLOR,DAY";
+        c = "\"" + c + "\"";
+        try{
+            FileWriter fileWriter = new FileWriter(csvFile, true);
+            fileWriter.append(text + COMMA_DELIMITER + c + COMMA_DELIMITER + p);
+            fileWriter.append(NEW_LINE_SEPARATOR);
+            fileWriter.flush();
+            fileWriter.close();
+        }catch ( IOException e ){
+            e.printStackTrace();
+        }
 
-      /* for (javafx.scene.Node component : mPane.getChildren()){
-            System.out.println(component.toString());
-        }*/
+
 
     }
 

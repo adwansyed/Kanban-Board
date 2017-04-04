@@ -1,0 +1,6 @@
+TASK,COLOR,DAY
+whiteTask,"rgb(255,255,255)",Monday
+redTask,"rgb(230,77,77)",Monday
+blueTask,"rgb(51,77,179)",Monday
+TusdayTask,"rgb(255,255,128)",Tuesday
+ThursdayTask,"rgb(77,128,77)",Thursday
