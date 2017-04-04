@@ -14,20 +14,24 @@ public class IntroSplash extends JWindow {
 
     public void showSplash() {
         JPanel content = (JPanel)getContentPane();
+
         content.setBackground(Color.white);
 
-        int width = 1000;
-        int height = 500;
+        int width = 500;
+        int height = 250;
         Dimension screen = Toolkit.getDefaultToolkit().getScreenSize();
         int x = (screen.width-width)/2;
         int y = (screen.height-height)/2;
         setBounds(x, y, width, height);
 
+        JLabel title = new JLabel("Welcome to the new Blackboard!");
         JLabel label = new JLabel(new ImageIcon("./"));
         JLabel name = new JLabel("Neo BlackBoard ver1.0", JLabel.CENTER);
-        name.setFont(new Font("UOIT", Font.BOLD, 12));
+        name.setFont(new Font("Serif", Font.PLAIN, 12));
+        title.setFont(new Font("Arial",Font.BOLD, 30));
         content.add(label, BorderLayout.CENTER);
         content.add(name, BorderLayout.SOUTH);
+        content.add(title, BorderLayout.CENTER);
         Color dodgerBlue = new Color(0, 0,255);
         content.setBorder(BorderFactory.createLineBorder(dodgerBlue, 15));
 
