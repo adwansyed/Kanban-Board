@@ -53,7 +53,7 @@
                         </Tab>
                         <Tab styleClass="gradesTab" text="Grades">
                             <content>
-                                <fx:include fx:id="gradesCalculatorTab" source="gradeCalculator.fxml" />
+                                <fx:include fx:id="gradesCalculatorTab" source="CourseTab.fxml" />
                             </content>
                         </Tab>
                     </tabs>

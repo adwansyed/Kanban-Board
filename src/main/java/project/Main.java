@@ -15,7 +15,7 @@ public class Main extends Application {
         splash.showSplash();
         Parent root = FXMLLoader.load(getClass().getResource("/fxml/main.fxml"));
         primaryStage.setTitle("Neo Blackboard");
-        primaryStage.setScene(new Scene(root, 900, 600));
+        primaryStage.setScene(new Scene(root, 900, 700));
         primaryStage.show();
     }
 

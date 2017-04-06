@@ -1,8 +1,56 @@
-<?import javafx.geometry.Insets?>
-<?import javafx.scene.layout.GridPane?>
+<?xml version="1.0" encoding="UTF-8"?>
 
 <?import javafx.scene.control.Button?>
 <?import javafx.scene.control.Label?>
-<GridPane fx:controller="project.GradesCalculatorTabController"
-          xmlns:fx="http://javafx.com/fxml" alignment="center" hgap="10" vgap="10">
-</GridPane>
+<?import javafx.scene.control.Menu?>
+<?import javafx.scene.control.MenuBar?>
+<?import javafx.scene.control.MenuItem?>
+<?import javafx.scene.control.SeparatorMenuItem?>
+<?import javafx.scene.control.TableColumn?>
+<?import javafx.scene.control.TableView?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.layout.VBox?>
+<?import javafx.scene.text.Font?>
+
+<VBox prefHeight="600.0" prefWidth="700.0" xmlns="http://javafx.com/javafx/8.0.111" xmlns:fx="http://javafx.com/fxml/1" fx:controller="project.GradesCalculatorTabController">
+    <children>
+        <AnchorPane maxHeight="-1.0" maxWidth="-1.0" prefHeight="-1.0" prefWidth="-1.0" VBox.vgrow="ALWAYS">
+            <children>
+                <TextField fx:id="courseNameField" layoutX="1" layoutY="20" promptText="Enter Course Name"/>
+                <TableView fx:id="tableView" layoutY="44.0" prefHeight="150.0" prefWidth="600.0">
+                    <columns>
+                        <TableColumn fx:id="courseItem" prefWidth="280" text="Course Item" />
+                        <TableColumn fx:id="worth" prefWidth="160.0" text="Worth %" />
+                        <TableColumn fx:id="yourMark" prefWidth="160.0" text="Your Mark" />
+                    </columns>
+                </TableView>
+                <Label fx:id="currentMarkLabel" layoutX="10.0" layoutY="205.0" text="Current Mark:" />
+                <Label fx:id="currentCourseTotalLabel" layoutX="340.0" layoutY="205.0" text="0%:" />
+                <Label fx:id="currentCourseMarkLabel" layoutX="500.0" layoutY="205.0" text="0%" />
+                <Label layoutX="10.0" layoutY="241.0" text="Course Item:" />
+                <Label layoutX="10.0" layoutY="279.0" text="Worth:" />
+                <TextField fx:id="courseItemField" layoutX="100.0" layoutY="237.0" promptText="Course Item"  />
+                <TextField fx:id="worthField" layoutX="100.0" layoutY="275.0" promptText="Worth %" />
+                <Label layoutX="320.0" layoutY="241.0" text="Your Mark:" />
+                <TextField fx:id="yourMarkField" layoutX="400.0" layoutY="237.0" promptText="Your Mark %" />
+                <Button fx:id="add" layoutX="320.0" layoutY="273.0" mnemonicParsing="false" onAction="#addItem" text="Add Item" />
+                <Button fx:id="delete" layoutX="450.0" layoutY="273.0" mnemonicParsing="false" onAction="#deleteItem" text="Delete Row" />
+                <Label layoutX="10.0" layoutY="320.0" text="Final Exam Worth:" />
+                <Label fx:id="finalExamWorth" layoutX="340.0" layoutY="320.0" text="0%" />
+                <Label layoutX="10.0" layoutY="360.0" text="To get 50%:" />
+                <Label layoutX="10.0" layoutY="385.0" text="To get 60%:" />
+                <Label layoutX="10.0" layoutY="410.0" text="To get 70%:" />
+                <Label layoutX="10.0" layoutY="435.0" text="To get 80%:" />
+                <Label layoutX="10.0" layoutY="460.0" text="To get 90%:" />
+                <Label layoutX="10.0" layoutY="485.0" text="To get 100%:" />
+                <Label fx:id="fifty" layoutX="340.0" layoutY="360.0" text="0%" />
+                <Label fx:id="sixty" layoutX="340.0" layoutY="385.0" text="0%" />
+                <Label fx:id="seventy" layoutX="340.0" layoutY="410.0" text="0%" />
+                <Label fx:id="eighty" layoutX="340.0" layoutY="435.0" text="0%" />
+                <Label fx:id="ninety" layoutX="340.0" layoutY="460.0" text="0%" />
+                <Label fx:id="hundred" layoutX="340.0" layoutY="485.0" text="0%" />
+            </children>
+        </AnchorPane>
+    </children>
+</VBox>
