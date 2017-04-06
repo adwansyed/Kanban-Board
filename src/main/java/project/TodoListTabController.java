@@ -14,9 +14,11 @@ import javafx.scene.paint.Color;
 import javafx.util.Pair;
 
 import java.io.File;
+import java.io.FileNotFoundException;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.util.Optional;
+import java.util.Scanner;
 
 /**
  * Created by 100525709 on 3/14/2017.
@@ -31,8 +33,6 @@ public class TodoListTabController {
 
     public void initialize(){
 
-        //TODO: pre-load CSV
-
         // Initialize all panes to handle dragging
         addDropHandling(mPane);
         addDropHandling(tPane);
@@ -41,6 +41,35 @@ public class TodoListTabController {
         addDropHandling(fPane);
         addDropHandling(satPane);
         addDropHandling(sunPane);
+
+        //Pre-loading previous session tasks saved in CSV
+        try {
+            // read input from file
+            Scanner inputStream = new Scanner(todoListFile);
+            inputStream.next(); // Skip header line
+
+            // hashNext() loops line-by-line
+            while(inputStream.hasNext()) {
+                //read single line, put in string
+                String data = inputStream.next();
+                String col[] = data.split(",");
+                String colour = col[1].substring(1) + "," + col[2] + "," + col[3].substring(0,col[3].length()-1);
+                String paneID = col[4];
+                System.out.println(paneID);
+                if (paneID.equals("Monday")){ mPane.getChildren().add(initButton(col[0],colour,col[4])); }
+                if (paneID.equals("Tuesday")){ tPane.getChildren().add(initButton(col[0],colour,col[4]));}
+                if (paneID.equals("Wednesday")){ wPane.getChildren().add(initButton(col[0],colour,col[4]));}
+                if (paneID.equals("Thursday")){ thPane.getChildren().add(initButton(col[0],colour,col[4]));}
+                if (paneID.equals("Friday")){ fPane.getChildren().add(initButton(col[0],colour,col[4]));}
+                if (paneID.equals("Saturday")){ satPane.getChildren().add(initButton(col[0],colour,col[4]));}
+                if (paneID.equals("Sunday")){ sunPane.getChildren().add(initButton(col[0],colour,col[4]));}
+                //System.out.println(columns.length);
+                //System.out.println(columns[1].substring(1) + "," + columns[2] + "," + columns[3].substring(0,columns[3].length()-1) );
+                //System.out.println(data + "***");
+            }
+
+        }catch (FileNotFoundException e){ e.printStackTrace();}
+
     }
 
     private String toRgbString(Color c) {
@@ -158,6 +187,39 @@ public class TodoListTabController {
             }
         });
         appendToCSV(text, c, day);
+        return button ;
+    }
+
+    private Button initButton(String text, String c, String day) {
+        System.out.println(text + c + day);
+        Button button = new Button(text);
+        button.setStyle("-fx-background-color: "+ c +" ; -fx-text-fill: black;" + "-fx-font-weight: bold;");
+        button.setMinWidth(120);
+        button.setOnDragDetected(e -> {
+            Dragboard db = button.startDragAndDrop(TransferMode.MOVE);
+            db.setDragView(button.snapshot(null, null));
+            ClipboardContent cc = new ClipboardContent();
+            cc.put(buttonFormat, "button");
+            db.setContent(cc);
+            draggingButton = button ;
+        });
+        button.setOnDragDone(e -> draggingButton = null);
+        button.setOnMouseClicked(new EventHandler<MouseEvent>() {
+            @Override
+            public void handle(MouseEvent event) {
+                if (event.getButton() == MouseButton.SECONDARY){
+                    String paneID = button.getParent().getId();
+                    if (paneID == mPane.getId()){ mPane.getChildren().remove(button);}
+                    if (paneID == tPane.getId()){ tPane.getChildren().remove(button);}
+                    if (paneID == wPane.getId()){ wPane.getChildren().remove(button);}
+                    if (paneID == thPane.getId()){ thPane.getChildren().remove(button);}
+                    if (paneID == fPane.getId()){ fPane.getChildren().remove(button);}
+                    if (paneID == satPane.getId()){ satPane.getChildren().remove(button);}
+                    if (paneID == sunPane.getId()){ sunPane.getChildren().remove(button);}
+                    //TODO: updateCSV
+                }
+            }
+        });
         return button ;
     }
 
