@@ -49,23 +49,29 @@ public class TodoListTabController {
             inputStream.next(); // Skip header line
 
             // hashNext() loops line-by-line
+            String buffer = ""; // buffer to hold multiple word tasks
             while(inputStream.hasNext()) {
                 //read single line, put in string
                 String data = inputStream.next();
-                String col[] = data.split(",");
-                String colour = col[1].substring(1) + "," + col[2] + "," + col[3].substring(0,col[3].length()-1);
-                String paneID = col[4];
-                System.out.println(paneID);
-                if (paneID.equals("Monday")){ mPane.getChildren().add(initButton(col[0],colour,col[4])); }
-                if (paneID.equals("Tuesday")){ tPane.getChildren().add(initButton(col[0],colour,col[4]));}
-                if (paneID.equals("Wednesday")){ wPane.getChildren().add(initButton(col[0],colour,col[4]));}
-                if (paneID.equals("Thursday")){ thPane.getChildren().add(initButton(col[0],colour,col[4]));}
-                if (paneID.equals("Friday")){ fPane.getChildren().add(initButton(col[0],colour,col[4]));}
-                if (paneID.equals("Saturday")){ satPane.getChildren().add(initButton(col[0],colour,col[4]));}
-                if (paneID.equals("Sunday")){ sunPane.getChildren().add(initButton(col[0],colour,col[4]));}
-                //System.out.println(columns.length);
-                //System.out.println(columns[1].substring(1) + "," + columns[2] + "," + columns[3].substring(0,columns[3].length()-1) );
-                //System.out.println(data + "***");
+                String col[] = data.split("[ ,\n]");
+                int wordCount = col.length - 4;
+                if (wordCount < 0){
+                    buffer += " " + col[0]; // update buffer based on word count
+                    continue;               // handles "space" characters which act as newline when delimited
+                }
+                String colour = col[wordCount].substring(1) + "," + col[wordCount + 1] + "," + col[wordCount + 2].substring(0,col[wordCount + 2].length() -1);
+                String paneID = col[wordCount + 3];
+                buffer += " " + col[0];
+                String task = buffer;
+                buffer = "";
+
+                if (paneID.equals("Monday")){ mPane.getChildren().add(initButton(task,colour,col[wordCount + 3])); }
+                if (paneID.equals("Tuesday")){ tPane.getChildren().add(initButton(task,colour,col[wordCount + 3]));}
+                if (paneID.equals("Wednesday")){ wPane.getChildren().add(initButton(task,colour,col[wordCount + 3]));}
+                if (paneID.equals("Thursday")){ thPane.getChildren().add(initButton(task,colour,col[wordCount + 3]));}
+                if (paneID.equals("Friday")){ fPane.getChildren().add(initButton(task,colour,col[wordCount + 3]));}
+                if (paneID.equals("Saturday")){ satPane.getChildren().add(initButton(task,colour,col[wordCount + 3]));}
+                if (paneID.equals("Sunday")){ sunPane.getChildren().add(initButton(task,colour,col[wordCount + 3]));}
             }
 
         }catch (FileNotFoundException e){ e.printStackTrace();}
