@@ -248,6 +248,7 @@ public class GradesCalculatorTabController {
     @FXML
     public void addItem(ActionEvent actionEvent) {
         if ((courseItemField.getText() != null) && (worthField.getText() != null) && (yourMarkField.getText() != null)) {
+            //get data from input fields
             String courseNameInput = courseNameField.getText().trim();
             String courseItemInput = courseItemField.getText();
             Float worthInput = Float.parseFloat(worthField.getText());
@@ -267,7 +268,7 @@ public class GradesCalculatorTabController {
             worthField.clear();
             yourMarkField.clear();
 
-
+            //append data to Database.csv
             try {
                 FileWriter fw = new FileWriter(file, true);
                 BufferedWriter bw = new BufferedWriter(fw);
@@ -290,7 +291,7 @@ public class GradesCalculatorTabController {
         currentCourseTotalLabel.setText(Float.toString(currentCourseTotal)+"%");
 
         percentOfCourse -= selectedItem.getYourMark()*selectedItem.getWorth()*0.01;
-        //To prevent a NaN sign on the application
+        //To prevent a num/0 operation
         if(currentCourseTotal != 0) {
             currentCourseMarkLabel.setText(roundMark(percentOfCourse/currentCourseTotal)+"%");
         }

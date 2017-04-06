@@ -101,6 +101,7 @@ public class CourseTabController {
                 FXMLLoader loader = new FXMLLoader(getClass().getResource("/fxml/gradeCalculator.fxml"));
                 //loader.load();
                 tab.setContent(loader.load());
+                tab.setStyle("-fx-background-color: #B0C4DE; ");
                 tabPane.getTabs().add(tab);
                 GradesCalculatorTabController controller = loader.getController();
 
@@ -125,12 +126,14 @@ public class CourseTabController {
     public void addTab(ActionEvent actionEvent) throws IOException {
         if(courseName.getText().trim().isEmpty()) {
             Tab tab = new Tab("New Course");
+            tab.setStyle("-fx-background-color: #B0C4DE;");
             tabPane.getTabs().add(tab);
             tab.setContent((Node) FXMLLoader.load(this.getClass().getResource("/fxml/gradeCalculator.fxml")));
         }
         else {
             //courseLabel.textProperty().bind(courseName.getText());
             Tab tab = new Tab(courseName.getText());
+            tab.setStyle("-fx-background-color: #B0C4DE;");
             tabPane.getTabs().add(tab);
             tab.setContent((Node) FXMLLoader.load(this.getClass().getResource("/fxml/gradeCalculator.fxml")));
         }

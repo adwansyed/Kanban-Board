@@ -1,6 +1,7 @@
 package project;
 
 import javafx.application.Application;
+import javafx.application.Platform;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
@@ -17,6 +18,7 @@ public class Main extends Application {
         primaryStage.setTitle("Neo Blackboard");
         primaryStage.setScene(new Scene(root, 900, 700));
         primaryStage.show();
+        primaryStage.setOnCloseRequest(e -> Platform.exit());
     }
 
 
