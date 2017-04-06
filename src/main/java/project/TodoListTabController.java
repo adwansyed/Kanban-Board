@@ -84,6 +84,15 @@ public class TodoListTabController {
         return (int) (d * 255);
     }
 
+    // Calculates threshold index for darkness so we can choose font colour accordingly
+    private int Brightness(String c){
+        String rgbData[] = c.split(",");
+        int r = Integer.parseInt(rgbData[0].substring(4, rgbData[0].length()));
+        int g = Integer.parseInt(rgbData[1].substring(0, rgbData[1].length()));
+        int b = Integer.parseInt(rgbData[2].substring(0, rgbData[2].length()-1));
+        return (int)Math.sqrt( r * r * .241 + g * g * .691 + b * b * .068);
+    }
+
     private void addDialog(Pane pane, String day) {
         Dialog<Pair<String, String>> addDialog = new Dialog<>();
         addDialog.setTitle("Add Task");
@@ -158,8 +167,12 @@ public class TodoListTabController {
     }
 
     private Button createButton(String text, String c, String day) {
+        String fontColour = " ; -fx-text-fill: black;";
+        if (Brightness(c) < 130){
+            fontColour = " ; -fx-text-fill: white;";
+        }
         Button button = new Button(text);
-        button.setStyle("-fx-background-color: "+ c +" ; -fx-text-fill: black;" + "-fx-font-weight: bold;");
+        button.setStyle("-fx-background-color: "+ c + fontColour + "-fx-font-weight: bold;");
         button.setMinWidth(120);
         button.setOnDragDetected(e -> {
             Dragboard db = button.startDragAndDrop(TransferMode.MOVE);
@@ -191,9 +204,12 @@ public class TodoListTabController {
     }
 
     private Button initButton(String text, String c, String day) {
-        System.out.println(text + c + day);
+        String fontColour = " ; -fx-text-fill: black;";
+        if (Brightness(c) < 130){
+            fontColour = " ; -fx-text-fill: white;";
+        }
         Button button = new Button(text);
-        button.setStyle("-fx-background-color: "+ c +" ; -fx-text-fill: black;" + "-fx-font-weight: bold;");
+        button.setStyle("-fx-background-color: "+ c + fontColour + "-fx-font-weight: bold;");
         button.setMinWidth(120);
         button.setOnDragDetected(e -> {
             Dragboard db = button.startDragAndDrop(TransferMode.MOVE);
