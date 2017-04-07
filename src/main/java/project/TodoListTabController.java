@@ -14,9 +14,11 @@ import javafx.scene.paint.Color;
 import javafx.util.Pair;
 
 import java.io.File;
+import java.io.FileNotFoundException;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.util.Optional;
+import java.util.Scanner;
 
 /**
  * Created by 100525709 on 3/14/2017.
@@ -31,8 +33,6 @@ public class TodoListTabController {
 
     public void initialize(){
 
-        //TODO: pre-load CSV
-
         // Initialize all panes to handle dragging
         addDropHandling(mPane);
         addDropHandling(tPane);
@@ -41,6 +41,41 @@ public class TodoListTabController {
         addDropHandling(fPane);
         addDropHandling(satPane);
         addDropHandling(sunPane);
+
+        //Pre-loading previous session tasks saved in CSV
+        try {
+            // read input from file
+            Scanner inputStream = new Scanner(todoListFile);
+            inputStream.next(); // Skip header line
+
+            // hashNext() loops line-by-line
+            String buffer = ""; // buffer to hold multiple word tasks
+            while(inputStream.hasNext()) {
+                //read single line, put in string
+                String data = inputStream.next();
+                String col[] = data.split("[ ,\n]");
+                int wordCount = col.length - 4;
+                if (wordCount < 0){
+                    buffer += " " + col[0]; // update buffer based on word count
+                    continue;               // handles "space" characters which act as newline when delimited
+                }
+                String colour = col[wordCount].substring(1) + "," + col[wordCount + 1] + "," + col[wordCount + 2].substring(0,col[wordCount + 2].length() -1);
+                String paneID = col[wordCount + 3];
+                buffer += " " + col[0];
+                String task = buffer;
+                buffer = "";
+
+                if (paneID.equals("Monday")){ mPane.getChildren().add(initButton(task,colour,col[wordCount + 3])); }
+                if (paneID.equals("Tuesday")){ tPane.getChildren().add(initButton(task,colour,col[wordCount + 3]));}
+                if (paneID.equals("Wednesday")){ wPane.getChildren().add(initButton(task,colour,col[wordCount + 3]));}
+                if (paneID.equals("Thursday")){ thPane.getChildren().add(initButton(task,colour,col[wordCount + 3]));}
+                if (paneID.equals("Friday")){ fPane.getChildren().add(initButton(task,colour,col[wordCount + 3]));}
+                if (paneID.equals("Saturday")){ satPane.getChildren().add(initButton(task,colour,col[wordCount + 3]));}
+                if (paneID.equals("Sunday")){ sunPane.getChildren().add(initButton(task,colour,col[wordCount + 3]));}
+            }
+
+        }catch (FileNotFoundException e){ e.printStackTrace();}
+
     }
 
     private String toRgbString(Color c) {
@@ -53,6 +88,15 @@ public class TodoListTabController {
 
     private int to255Int(double d) {
         return (int) (d * 255);
+    }
+
+    // Calculates threshold index for darkness so we can choose font colour accordingly
+    private int Brightness(String c){
+        String rgbData[] = c.split(",");
+        int r = Integer.parseInt(rgbData[0].substring(4, rgbData[0].length()));
+        int g = Integer.parseInt(rgbData[1].substring(0, rgbData[1].length()));
+        int b = Integer.parseInt(rgbData[2].substring(0, rgbData[2].length()-1));
+        return (int)Math.sqrt( r * r * .241 + g * g * .691 + b * b * .068);
     }
 
     private void addDialog(Pane pane, String day) {
@@ -129,8 +173,12 @@ public class TodoListTabController {
     }
 
     private Button createButton(String text, String c, String day) {
+        String fontColour = " ; -fx-text-fill: black;";
+        if (Brightness(c) < 130){
+            fontColour = " ; -fx-text-fill: white;";
+        }
         Button button = new Button(text);
-        button.setStyle("-fx-background-color: "+ c +" ; -fx-text-fill: black;" + "-fx-font-weight: bold;");
+        button.setStyle("-fx-background-color: "+ c + fontColour + "-fx-font-weight: bold;");
         button.setMinWidth(120);
         button.setOnDragDetected(e -> {
             Dragboard db = button.startDragAndDrop(TransferMode.MOVE);
@@ -158,6 +206,42 @@ public class TodoListTabController {
             }
         });
         appendToCSV(text, c, day);
+        return button ;
+    }
+
+    private Button initButton(String text, String c, String day) {
+        String fontColour = " ; -fx-text-fill: black;";
+        if (Brightness(c) < 130){
+            fontColour = " ; -fx-text-fill: white;";
+        }
+        Button button = new Button(text);
+        button.setStyle("-fx-background-color: "+ c + fontColour + "-fx-font-weight: bold;");
+        button.setMinWidth(120);
+        button.setOnDragDetected(e -> {
+            Dragboard db = button.startDragAndDrop(TransferMode.MOVE);
+            db.setDragView(button.snapshot(null, null));
+            ClipboardContent cc = new ClipboardContent();
+            cc.put(buttonFormat, "button");
+            db.setContent(cc);
+            draggingButton = button ;
+        });
+        button.setOnDragDone(e -> draggingButton = null);
+        button.setOnMouseClicked(new EventHandler<MouseEvent>() {
+            @Override
+            public void handle(MouseEvent event) {
+                if (event.getButton() == MouseButton.SECONDARY){
+                    String paneID = button.getParent().getId();
+                    if (paneID == mPane.getId()){ mPane.getChildren().remove(button);}
+                    if (paneID == tPane.getId()){ tPane.getChildren().remove(button);}
+                    if (paneID == wPane.getId()){ wPane.getChildren().remove(button);}
+                    if (paneID == thPane.getId()){ thPane.getChildren().remove(button);}
+                    if (paneID == fPane.getId()){ fPane.getChildren().remove(button);}
+                    if (paneID == satPane.getId()){ satPane.getChildren().remove(button);}
+                    if (paneID == sunPane.getId()){ sunPane.getChildren().remove(button);}
+                    //TODO: updateCSV
+                }
+            }
+        });
         return button ;
     }
 

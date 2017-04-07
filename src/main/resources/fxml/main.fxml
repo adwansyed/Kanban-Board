@@ -10,7 +10,7 @@
 <?import javafx.scene.layout.VBox?>
 
 <?import java.net.URL?>
-<VBox prefHeight="600" prefWidth="900" xmlns="http://javafx.com/javafx/8.0.111" xmlns:fx="http://javafx.com/fxml/1" fx:controller="project.Main">
+<VBox prefHeight="600" prefWidth="900" xmlns="http://javafx.com/javafx/8.0.111" xmlns:fx="http://javafx.com/fxml/1" fx:controller="project.MainController">
     <children>
         <MenuBar VBox.vgrow="NEVER">
             <menus>
@@ -22,7 +22,7 @@
                         <MenuItem mnemonicParsing="false" text="Save" />
                         <MenuItem mnemonicParsing="false" text="Save As…" />
                         <SeparatorMenuItem mnemonicParsing="false" />
-                        <MenuItem mnemonicParsing="false" text="Quit" />
+                        <MenuItem mnemonicParsing="false" text="Quit" onAction="#exit" />
                     </items>
                 </Menu>
                 <Menu mnemonicParsing="false" text="Help">
@@ -53,7 +53,7 @@
                         </Tab>
                         <Tab styleClass="gradesTab" text="Grades">
                             <content>
-                                <fx:include fx:id="gradesCalculatorTab" source="gradeCalculator.fxml" />
+                                <fx:include fx:id="gradesCalculatorTab" source="CourseTab.fxml" />
                             </content>
                         </Tab>
                     </tabs>

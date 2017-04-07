@@ -1,15 +1,13 @@
 package project;
 
-import com.sun.javaws.ui.SplashScreen;
 import javafx.application.Application;
+import javafx.application.Platform;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.stage.Stage;
 
 public class Main extends Application {
-
-
 
     @Override
     public void start(Stage primaryStage) throws Exception{
@@ -18,8 +16,9 @@ public class Main extends Application {
         splash.showSplash();
         Parent root = FXMLLoader.load(getClass().getResource("/fxml/main.fxml"));
         primaryStage.setTitle("Neo Blackboard");
-        primaryStage.setScene(new Scene(root, 900, 600));
+        primaryStage.setScene(new Scene(root, 900, 700));
         primaryStage.show();
+        primaryStage.setOnCloseRequest(e -> Platform.exit());
     }
 
 

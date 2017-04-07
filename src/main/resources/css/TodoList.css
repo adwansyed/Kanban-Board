@@ -1,0 +1,8 @@
+.anchorPane{
+     -fx-background-color: #dddddd;
+ }
+.addButton{
+    -fx-background-color: #00ba63;
+    -fx-text-fill: white;
+    -fx-font-weight: bold;
+}
