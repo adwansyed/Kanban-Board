@@ -63,63 +63,35 @@ public class CourseTabController {
     @FXML
     private Label courseLabel;
 
+    private Client client;
+
     public void initialize() throws IOException {
+        client = new Client("127.0.0.1", 2222);
+
         //Loads all the data the user has inputted in previous session.
-        ObservableList<CourseItem> marks = FXCollections.observableArrayList();
-        ObservableList<String> courseNames = FXCollections.observableArrayList();
-        ObservableList<Course> courses = FXCollections.observableArrayList();
-        try {
-            //System.out.println(file);
-            //System.out.println(file.getAbsoluteFile());
-            //String curDir = System.getProperty("data/Database.csv");
-            //File GradeList = new File("data/Database.csv");
-            //System.out.println("Current sys dir: " + curDir);
-            //System.out.println("Current abs dir: " + GradeList.getAbsolutePath());
-            FileReader reader = new FileReader(file);
-            BufferedReader in = new BufferedReader(reader);
+        ObservableList<Course> courses = client.getData("Get");
+        for(Course c: courses) {
+            Tab tab = new Tab(c.getName());
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/fxml/gradeCalculator.fxml"));
+            //loader.load();
+            tab.setContent(loader.load());
+            tab.setStyle("-fx-background-color: #B0C4DE; ");
+            tabPane.getTabs().add(tab);
 
-            String line;
+            GradesCalculatorTabController controller = loader.getController();
 
-            while ((line = in.readLine()) != null) {
-                String[] dataFields = line.split(",");
-                if(courseNames.contains(dataFields[0])) {
-                    for(Course c: courses) {
-                        if (c.getName().equals(dataFields[0])) {
-                            c.getMarks().add(new CourseItem(dataFields[0],dataFields[1],Float.parseFloat(dataFields[2]),Float.parseFloat(dataFields[3])));
-                        }
-                    }
-                }
-                else {
-                    courseNames.add(dataFields[0]);
-                    Course newCourse = new Course(dataFields[0]);
-                    newCourse.getMarks().add(new CourseItem(dataFields[0],dataFields[1],Float.parseFloat(dataFields[2]),Float.parseFloat(dataFields[3])));
-                    courses.add(newCourse);
-                }
+            controller.getCourseNameField().setText(c.getName());
+
+            controller.getTableView().setItems(c.getMarks());
+            controller.getCourseItem().setCellValueFactory(( new PropertyValueFactory<>("courseItem")));
+            controller.getWorth().setCellValueFactory(( new PropertyValueFactory<>("worth")));
+            controller.getYourMark().setCellValueFactory(( new PropertyValueFactory<>("yourMark")));
+
+            //update Labels
+            for(CourseItem item: c.getMarks()) {
+                controller.updateLables(item);
             }
-            for(Course c: courses) {
-                Tab tab = new Tab(c.getName());
-                FXMLLoader loader = new FXMLLoader(getClass().getResource("/fxml/gradeCalculator.fxml"));
-                //loader.load();
-                tab.setContent(loader.load());
-                tab.setStyle("-fx-background-color: #B0C4DE; ");
-                tabPane.getTabs().add(tab);
-                GradesCalculatorTabController controller = loader.getController();
-
-                controller.getCourseNameField().setText(c.getName());
-
-                controller.getTableView().setItems(c.getMarks());
-                controller.getCourseItem().setCellValueFactory(( new PropertyValueFactory<>("courseItem")));
-                controller.getWorth().setCellValueFactory(( new PropertyValueFactory<>("worth")));
-                controller.getYourMark().setCellValueFactory(( new PropertyValueFactory<>("yourMark")));
-
-                //update Labels
-                for(CourseItem item: c.getMarks()) {
-                    controller.updateLables(item);
-                }
-            }
-
-        } catch (IOException e){ e.printStackTrace(); }
-
+        }
     }
 
     @FXML

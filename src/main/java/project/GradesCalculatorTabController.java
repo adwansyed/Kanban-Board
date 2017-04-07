@@ -10,6 +10,7 @@ import javafx.scene.control.TextField;
 import javafx.scene.control.cell.PropertyValueFactory;
 
 import java.io.*;
+import java.net.Socket;
 import java.text.DecimalFormat;
 
 public class GradesCalculatorTabController {
@@ -225,7 +226,10 @@ public class GradesCalculatorTabController {
         this.hundred = hundred;
     }
 
+    private Client client;
+
     public void initialize() throws IOException {
+        client = new Client("127.0.0.1", 2222);
     }
 
     public void updateLables(CourseItem item) {
@@ -246,7 +250,7 @@ public class GradesCalculatorTabController {
     }
 
     @FXML
-    public void addItem(ActionEvent actionEvent) {
+    public void addItem(ActionEvent actionEvent) throws IOException {
         if ((courseItemField.getText() != null) && (worthField.getText() != null) && (yourMarkField.getText() != null)) {
             //get data from input fields
             String courseNameInput = courseNameField.getText().trim();
@@ -254,6 +258,9 @@ public class GradesCalculatorTabController {
             Float worthInput = Float.parseFloat(worthField.getText());
             Float yourMarkInput = Float.parseFloat(yourMarkField.getText());
             CourseItem newCourseItem = new CourseItem(courseNameInput, courseItemInput, worthInput, yourMarkInput);
+
+            //Upload data to Database.csv
+            client.submitQuery("Add", courseNameInput+","+courseItemInput+","+worthInput+","+yourMarkInput);
 
             //update labels
             updateLables(newCourseItem);
@@ -267,25 +274,16 @@ public class GradesCalculatorTabController {
             courseItemField.clear();
             worthField.clear();
             yourMarkField.clear();
-
-            //append data to Database.csv
-            try {
-                FileWriter fw = new FileWriter(file, true);
-                BufferedWriter bw = new BufferedWriter(fw);
-                PrintWriter out = new PrintWriter(bw);
-                out.println(courseNameInput + "," +courseItemInput + "," + worthInput + "," + yourMarkInput);
-                out.close();
-                bw.close();
-                fw.close();
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
         }
     }
 
     public void deleteItem(ActionEvent actionEvent) throws IOException {
+        //remove item from table
         CourseItem selectedItem = tableView.getSelectionModel().getSelectedItem();
         tableView.getItems().remove(selectedItem);
+
+        //remove item from Database.csv
+        client.submitQuery("Delete", selectedItem.getCourseName()+","+selectedItem.getCourseItem()+","+ selectedItem.getWorth()+","+selectedItem.getYourMark());
 
         currentCourseTotal -= selectedItem.getWorth();
         currentCourseTotalLabel.setText(Float.toString(currentCourseTotal)+"%");
@@ -315,7 +313,7 @@ public class GradesCalculatorTabController {
         //Temp file is created. Every line except the file that we want to delete is added to tempfile.
         //TempFile is then converted to Database.csv
         //File inputFile = new File("data/Database.csv");
-        File tempFile = new File("TempCsv.csv");
+/*        File tempFile = new File("TempCsv.csv");
 
         BufferedReader reader = new BufferedReader(new FileReader(file));
         BufferedWriter writer = new BufferedWriter(new FileWriter(tempFile));
@@ -331,6 +329,6 @@ public class GradesCalculatorTabController {
         }
         writer.close();
         reader.close();
-        boolean successful = tempFile.renameTo(file);
+        boolean successful = tempFile.renameTo(file);*/
     }
 }
