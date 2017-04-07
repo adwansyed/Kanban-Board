@@ -12,7 +12,7 @@
 <?import javafx.scene.control.TableView?>
 <?import javafx.scene.control.TableColumn?>
 
-<AnchorPane maxHeight="700" maxWidth="900" minHeight="-Infinity" minWidth="-Infinity" prefHeight="592.0" prefWidth="920.0" xmlns="http://javafx.com/javafx/8.0.112" xmlns:fx="http://javafx.com/fxml/1" fx:controller="project.CourseTabController">
+<AnchorPane maxHeight="700" maxWidth="900" minHeight="-Infinity" minWidth="-Infinity" prefHeight="592.0" prefWidth="920.0" xmlns="http://javafx.com/javafx/8.0.111" xmlns:fx="http://javafx.com/fxml/1" fx:controller="project.CourseTabController">
     <children>
         <TabPane fx:id="tabPane" layoutX="3.0" layoutY="40.0" prefHeight="700.0" prefWidth="914.0" tabClosingPolicy="UNAVAILABLE">
             <tabs>

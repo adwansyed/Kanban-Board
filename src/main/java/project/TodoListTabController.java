@@ -13,10 +13,7 @@ import javafx.scene.layout.Pane;
 import javafx.scene.paint.Color;
 import javafx.util.Pair;
 
-import java.io.File;
-import java.io.FileNotFoundException;
-import java.io.FileWriter;
-import java.io.IOException;
+import java.io.*;
 import java.util.Optional;
 import java.util.Scanner;
 
@@ -34,13 +31,13 @@ public class TodoListTabController {
     public void initialize(){
 
         // Initialize all panes to handle dragging
-        addDropHandling(mPane);
-        addDropHandling(tPane);
-        addDropHandling(wPane);
-        addDropHandling(thPane);
-        addDropHandling(fPane);
-        addDropHandling(satPane);
-        addDropHandling(sunPane);
+        enableDraggingUpdates(mPane);
+        enableDraggingUpdates(tPane);
+        enableDraggingUpdates(wPane);
+        enableDraggingUpdates(thPane);
+        enableDraggingUpdates(fPane);
+        enableDraggingUpdates(satPane);
+        enableDraggingUpdates(sunPane);
 
         //Pre-loading previous session tasks saved in CSV
         try {
@@ -112,7 +109,7 @@ public class TodoListTabController {
         grid.setPadding(new Insets(20,150,10,10));
 
         TextField task = new TextField();
-        task.setPromptText("task");
+        task.setPromptText("Max: 12 characters");
         ColorPicker cp = new ColorPicker();
 
         grid.add(new Label("Task:"), 0, 0);
@@ -121,7 +118,7 @@ public class TodoListTabController {
         grid.add(cp,1,1);
         addDialog.getDialogPane().setContent(grid);
 
-        Platform.runLater(()->task.requestFocus());
+        Platform.runLater(()->cp.requestFocus());
         addDialog.setResultConverter(dialogButton -> {
             if (dialogButton == logButton){
                 return new Pair<>(task.getText(), cp.getValue().toString());
@@ -263,12 +260,27 @@ public class TodoListTabController {
 
     }
 
-    private void addDropHandling(Pane pane) {
+    private static void copyFile(File source, File dest) throws IOException {
+        InputStream is = null;
+        OutputStream os = null;
+        try {
+            is = new FileInputStream(source);
+            os = new FileOutputStream(dest);
+            byte[] buffer = new byte[1024];
+            int length;
+            while ((length = is.read(buffer)) > 0) {
+                os.write(buffer, 0, length);
+            }
+        } finally {
+            is.close();
+            os.close();
+        }
+    }
+
+    private void enableDraggingUpdates(Pane pane) {
         pane.setOnDragOver(e -> {
             Dragboard db = e.getDragboard();
-            if (db.hasContent(buttonFormat)
-                    && draggingButton != null
-                    && draggingButton.getParent() != pane) {
+            if (db.hasContent(buttonFormat) && draggingButton != null && draggingButton.getParent() != pane) {
                 e.acceptTransferModes(TransferMode.MOVE);
             }
         });
@@ -279,6 +291,51 @@ public class TodoListTabController {
                 ((Pane)draggingButton.getParent()).getChildren().remove(draggingButton);
                 pane.getChildren().add(draggingButton);
                 e.setDropCompleted(true);
+
+                //TODO: update CSV
+                File copy = new File("src/main/resources/data/previous.csv");
+                try{
+                    String NEW_LINE_SEPARATOR = "\n";
+                    String DELIMITER = ",";
+                    copyFile(todoListFile,copy);
+                    FileWriter fileWriter = new FileWriter(csvFile); // clear old CSV file
+                    fileWriter.append("TASK,COLOR,DAY");
+                    fileWriter.append(NEW_LINE_SEPARATOR);
+                    fileWriter.flush();
+                    fileWriter.close();
+
+                    FileWriter fileWriter2 = new FileWriter(csvFile, true);
+
+                    Scanner inputStream = new Scanner(copy);
+                    inputStream.next(); // Skip header line
+                    while (inputStream.hasNext()){
+                        String data = inputStream.next();
+                        String col[] = data.split(",");
+
+                        if (draggingButton.getText().contains(col[0])){
+                            String newRow = "";
+                            for (int i=0; i<col.length -1; i++){
+                                newRow += col[i] + DELIMITER;
+                            }
+                            if (pane.getId() == mPane.getId()){ newRow+= "Monday";}
+                            if (pane.getId()== tPane.getId()){ newRow+= "Tuesday";}
+                            if (pane.getId()== wPane.getId()){ newRow+= "Wednesday";}
+                            if (pane.getId() == thPane.getId()){ newRow+= "Thursday";}
+                            if (pane.getId() == fPane.getId()){ newRow+= "Friday";}
+                            if (pane.getId() == satPane.getId()){ newRow+= "Saturday";}
+                            if (pane.getId()== sunPane.getId()){ newRow+= "Sunday";}
+                            fileWriter2.append(newRow);
+                            fileWriter2.append(NEW_LINE_SEPARATOR);
+                            continue;
+                        }
+                        fileWriter2.append(data);
+                        fileWriter2.append(NEW_LINE_SEPARATOR);
+                    }
+                    fileWriter2.flush();
+                    fileWriter2.close();
+                }catch( IOException f){
+                    f.printStackTrace();
+                }
             }
         });
     }
