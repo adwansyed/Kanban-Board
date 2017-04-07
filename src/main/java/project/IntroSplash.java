@@ -26,13 +26,13 @@ public class IntroSplash extends JWindow {
 
         JLabel title = new JLabel("Welcome to the new Blackboard!");
         JLabel label = new JLabel(new ImageIcon("./"));
-        JLabel name = new JLabel("Neo BlackBoard ver1.0", JLabel.CENTER);
+        JLabel name = new JLabel("New BlackBoard ver1.0", JLabel.CENTER);
         name.setFont(new Font("Serif", Font.PLAIN, 12));
         title.setFont(new Font("Arial",Font.BOLD, 30));
         content.add(label, BorderLayout.CENTER);
         content.add(name, BorderLayout.SOUTH);
         content.add(title, BorderLayout.CENTER);
-        Color dodgerBlue = new Color(0, 0,255);
+        Color dodgerBlue = new Color(0, 100,255);
         content.setBorder(BorderFactory.createLineBorder(dodgerBlue, 15));
 
         //display the splash
