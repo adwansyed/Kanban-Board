@@ -1,7 +1,10 @@
-# SystemsIntegrationProject
+## Welcome
+This application is a Kanban style study tool written in JavaFX
 
-### Instructions for use
+#### Screenshot:
+![screenshot](https://cloud.githubusercontent.com/assets/1751112/24832405/6d330604-1c7d-11e7-990e-3a7fcb989899.PNG)
 
+#### Instructions for use
 Install Gradle and Git on your system. Make the following changes once:
 
 ```
@@ -36,7 +39,6 @@ $ git checkout [branch-name]
 This command will switch from the branch that you are in to the one specified.
 
 #### Build and run
-
 Under root folder in terminal interface issue following commands
 ```
 gradle classes
