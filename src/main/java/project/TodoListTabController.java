@@ -28,6 +28,7 @@ public class TodoListTabController {
     public File todoListFile = new File("src/main/resources/data/todoListData.csv");
     public String csvFile = todoListFile.getAbsolutePath();
 
+    // Fill daily tasks with previous saved session
     public void initialize(){
 
         // Initialize all panes to handle dragging
@@ -70,7 +71,6 @@ public class TodoListTabController {
                 if (paneID.equals("Saturday")){ satPane.getChildren().add(initButton(task,colour,col[wordCount + 3]));}
                 if (paneID.equals("Sunday")){ sunPane.getChildren().add(initButton(task,colour,col[wordCount + 3]));}
             }
-
         }catch (FileNotFoundException e){ e.printStackTrace();}
 
     }
@@ -133,6 +133,71 @@ public class TodoListTabController {
         });
     }
 
+    void deleteDialog(Button button){
+        // confirmation dialog
+        Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
+        alert.setTitle("Delete");
+        alert.setHeaderText("You are about to delete this task.");
+        alert.setContentText("Are you sure?");
+
+        Optional<ButtonType> result = alert.showAndWait();
+        if (result.get() == ButtonType.OK){
+            String paneID = button.getParent().getId();
+            deleteFromCSV(button);
+            if (paneID == mPane.getId()){ mPane.getChildren().remove(button);}
+            if (paneID == tPane.getId()){ tPane.getChildren().remove(button);}
+            if (paneID == wPane.getId()){ wPane.getChildren().remove(button);}
+            if (paneID == thPane.getId()){ thPane.getChildren().remove(button);}
+            if (paneID == fPane.getId()){ fPane.getChildren().remove(button);}
+            if (paneID == satPane.getId()){ satPane.getChildren().remove(button);}
+            if (paneID == sunPane.getId()){ sunPane.getChildren().remove(button);}
+        }
+    }
+
+    private void deleteFromCSV(Button button) {
+        File copy = new File("src/main/resources/data/previous.csv");
+        String paneID = button.getParent().getId();
+        if (paneID == mPane.getId()){ paneID = "Monday";}
+        if (paneID == tPane.getId()){ paneID = "Tuesday";}
+        if (paneID == wPane.getId()){ paneID = "Wednesday";}
+        if (paneID == thPane.getId()){ paneID = "Thursday";}
+        if (paneID == fPane.getId()){ paneID = "Friday";}
+        if (paneID == satPane.getId()){ paneID = "Saturday";}
+        if (paneID == sunPane.getId()){ paneID = "Sunday";}
+        try{
+            String NEW_LINE_SEPARATOR = "\n";
+            copyFile(todoListFile,copy);
+            FileWriter fileWriter = new FileWriter(csvFile); // clear old CSV file
+            fileWriter.append("TASK,COLOR,DAY");
+            fileWriter.append(NEW_LINE_SEPARATOR);
+            fileWriter.flush();
+            fileWriter.close();
+
+            FileWriter fileWriter2 = new FileWriter(csvFile, true);
+
+            Scanner inputStream = new Scanner(copy);
+            inputStream.next(); // Skip header line
+
+            int duplicateTaskCount = 0;
+            while (inputStream.hasNext()){
+                String data = inputStream.next();
+                String col[] = data.split(",");
+
+                if (button.getText().contains(col[0]) && col[col.length-1].equals(paneID)){
+                    // do not want to delete other tasks with same name
+                    duplicateTaskCount++;
+                    if (duplicateTaskCount == 1) {
+                        continue; // Skip hence delete row
+                    }
+                }
+                fileWriter2.append(data);
+                fileWriter2.append(NEW_LINE_SEPARATOR);
+            }
+            fileWriter2.flush();
+            fileWriter2.close();
+        }catch( IOException f){ f.printStackTrace(); }
+    }
+
     @FXML
     void addToMonday(ActionEvent event) {
         String day = "Monday";
@@ -186,19 +251,25 @@ public class TodoListTabController {
             draggingButton = button ;
         });
         button.setOnDragDone(e -> draggingButton = null);
+        // Right click context menu
+        ContextMenu contextMenu = new ContextMenu();
+        MenuItem item1 = new MenuItem("Delete");
+        contextMenu.getItems().add(item1);
+        button.setContextMenu(contextMenu);
+
         button.setOnMouseClicked(new EventHandler<MouseEvent>() {
             @Override
             public void handle(MouseEvent event) {
                 if (event.getButton() == MouseButton.SECONDARY){
-                    String paneID = button.getParent().getId();
-                    if (paneID == mPane.getId()){ mPane.getChildren().remove(button);}
-                    if (paneID == tPane.getId()){ tPane.getChildren().remove(button);}
-                    if (paneID == wPane.getId()){ wPane.getChildren().remove(button);}
-                    if (paneID == thPane.getId()){ thPane.getChildren().remove(button);}
-                    if (paneID == fPane.getId()){ fPane.getChildren().remove(button);}
-                    if (paneID == satPane.getId()){ satPane.getChildren().remove(button);}
-                    if (paneID == sunPane.getId()){ sunPane.getChildren().remove(button);}
-                    //TODO: updateCSV
+                    // Display context menu
+                    contextMenu.show(button, event.getScreenX(), event.getScreenY());
+                    item1.setOnAction(new EventHandler<ActionEvent>() {
+                        @Override
+                        public void handle(ActionEvent event) {
+                            deleteDialog(button);
+                        }
+                    });
+
                 }
             }
         });
@@ -223,19 +294,25 @@ public class TodoListTabController {
             draggingButton = button ;
         });
         button.setOnDragDone(e -> draggingButton = null);
+
+        // Right click context menu
+        ContextMenu contextMenu = new ContextMenu();
+        MenuItem item1 = new MenuItem("Delete");
+        contextMenu.getItems().add(item1);
+        button.setContextMenu(contextMenu);
+
         button.setOnMouseClicked(new EventHandler<MouseEvent>() {
             @Override
             public void handle(MouseEvent event) {
                 if (event.getButton() == MouseButton.SECONDARY){
-                    String paneID = button.getParent().getId();
-                    if (paneID == mPane.getId()){ mPane.getChildren().remove(button);}
-                    if (paneID == tPane.getId()){ tPane.getChildren().remove(button);}
-                    if (paneID == wPane.getId()){ wPane.getChildren().remove(button);}
-                    if (paneID == thPane.getId()){ thPane.getChildren().remove(button);}
-                    if (paneID == fPane.getId()){ fPane.getChildren().remove(button);}
-                    if (paneID == satPane.getId()){ satPane.getChildren().remove(button);}
-                    if (paneID == sunPane.getId()){ sunPane.getChildren().remove(button);}
-                    //TODO: updateCSV
+                    // Display context menu
+                    contextMenu.show(button, event.getScreenX(), event.getScreenY());
+                    item1.setOnAction(new EventHandler<ActionEvent>() {
+                        @Override
+                        public void handle(ActionEvent event) {
+                            deleteDialog(button);
+                        }
+                    });
                 }
             }
         });
@@ -255,9 +332,6 @@ public class TodoListTabController {
         }catch ( IOException e ){
             e.printStackTrace();
         }
-
-
-
     }
 
     private static void copyFile(File source, File dest) throws IOException {
