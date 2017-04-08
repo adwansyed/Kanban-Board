@@ -18,7 +18,7 @@ public class Main extends Application {
         splash.showSplash();
         Parent root = FXMLLoader.load(getClass().getResource("/fxml/main.fxml"));
         primaryStage.setTitle("Welcome");
-        primaryStage.setScene(new Scene(root, 900, 700));
+        primaryStage.setScene(new Scene(root, 900, 650));
         primaryStage.show();
         primaryStage.setOnCloseRequest(e -> Platform.exit());
     }
