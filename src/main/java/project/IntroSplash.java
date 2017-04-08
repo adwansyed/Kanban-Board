@@ -1,7 +1,9 @@
 package project;
 
-import java.awt.*;
 import javax.swing.*;
+import java.awt.*;
+import java.io.File;
+import java.io.IOException;
 
 /**
  * Created by 100518792 on 4/2/2017.
@@ -12,10 +14,11 @@ public class IntroSplash extends JWindow {
         duration = d;
     }
 
-    public void showSplash() {
+    public void showSplash() throws IOException {
         JPanel content = (JPanel)getContentPane();
-
-        content.setBackground(Color.white);
+        Color bg = new Color(236,240,241);
+        content.setBackground(bg);
+        content.setBorder(BorderFactory.createLineBorder(bg, 15));
 
         int width = 500;
         int height = 250;
@@ -24,16 +27,18 @@ public class IntroSplash extends JWindow {
         int y = (screen.height-height)/2;
         setBounds(x, y, width, height);
 
-        JLabel title = new JLabel("Welcome to the new Blackboard!");
-        JLabel label = new JLabel(new ImageIcon("./"));
-        JLabel name = new JLabel("New BlackBoard ver1.0", JLabel.CENTER);
-        name.setFont(new Font("Serif", Font.PLAIN, 12));
+        String filePath = new File("src/main/resources/images/logo.jpg").getAbsolutePath();
+
+        JLabel title = new JLabel("Back To Study", JLabel.CENTER);
+        JLabel name = new JLabel("v1.0", JLabel.CENTER);
+        System.out.println(new File(".").getCanonicalPath());
+        JLabel image = new JLabel(new ImageIcon(filePath));
+
+        name.setFont(new Font("Arial", Font.PLAIN, 12));
         title.setFont(new Font("Arial",Font.BOLD, 30));
-        content.add(label, BorderLayout.CENTER);
         content.add(name, BorderLayout.SOUTH);
-        content.add(title, BorderLayout.CENTER);
-        Color dodgerBlue = new Color(0, 100,255);
-        content.setBorder(BorderFactory.createLineBorder(dodgerBlue, 15));
+        content.add(title, BorderLayout.NORTH);
+        content.add(image, BorderLayout.CENTER);
 
         //display the splash
         setVisible(true);
