@@ -61,7 +61,7 @@ public class DashboardTabController {
         for(Map.Entry<String, Integer> entry: taskCount.entrySet()) {
             pieChartData.add(new PieChart.Data(entry.getKey(),entry.getValue()));
         }
-        //pieChartData.mode.setStyle("-fx-pie-color:" + m.group());
+        taskPieChart.setTitle("Task Pie Chart");
         taskPieChart.setData(pieChartData);
 
     }
@@ -102,14 +102,6 @@ public class DashboardTabController {
         }
     }
 
-    private String toRgbString(Color c) {
-        return "rgb(" + to255Int(c.getRed()) + "," + to255Int(c.getGreen()) + "," + to255Int(c.getBlue()) + ")";
-
-    }
-
-    private int to255Int(double d){
-        return (int) (d*255);
-    }
 }
 
 
