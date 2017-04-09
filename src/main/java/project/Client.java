@@ -34,7 +34,7 @@ public class Client {
         this.port = port;
     }
 
-    //This class was created because I needed to return an OnservableList. Otherwise, I would have used submitQuery()
+    //returns an observable list with all the courses the user has wrote on the application during  previous session
     public ObservableList<Course> getData(String command){
         ObservableList<String> courseNames = FXCollections.observableArrayList();
         ObservableList<Course> courses = FXCollections.observableArrayList();
@@ -73,7 +73,7 @@ public class Client {
         return courses;
     }
 
-    //Purpose of this is to send command and data to server which will update the files in the server side.
+    //Will tell server to add or delete data.
     public void submitQuery(String command, String data) {
         try {
             Socket client = new Socket(this.host, this.port);

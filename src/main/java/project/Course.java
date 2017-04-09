@@ -3,6 +3,7 @@ package project;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 
+//This class contains the data for the course
 public class Course {
     private String name;
     private ObservableList<CourseItem> marks;

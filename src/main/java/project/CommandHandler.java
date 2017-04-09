@@ -2,17 +2,14 @@ package project;
 
 import java.io.*;
 import java.net.Socket;
-import java.nio.file.Path;
-import java.nio.file.Paths;
 
 /*
-    The serverHandler takes care of the client commands in the run method. Each command is given a separate thread.
+    The CommandHandler takes care of the client commands in the run method. Each command is given a separate thread.
  */
 
 public class CommandHandler implements Runnable {
     private Socket socket;
     private File databaseFile = new File("src/main/resources/data/Database.csv");
-    private File toDoFile = new File(".");//Add relative path of your file Adwan
 
     public CommandHandler(Socket socket) {
         this.socket = socket;
@@ -27,7 +24,6 @@ public class CommandHandler implements Runnable {
             String command = in.readLine();
             String data = in.readLine();
 
-            //Create if statement for your command and add data to it. See two if statements down for examples.
 
             if(command.equals("Get")) {
                 FileReader reader = new FileReader(databaseFile);
@@ -41,12 +37,14 @@ public class CommandHandler implements Runnable {
                 inFromFile.close();
             }
 
+            //New item that the user wrote is added to the databse on the server.
             if(command.equals("Add")) {
                 try {
                     FileWriter fw = new FileWriter(databaseFile, true);
                     BufferedWriter bw = new BufferedWriter(fw);
                     PrintWriter outToFile = new PrintWriter(bw);
                     outToFile.println(data);
+
                     outToFile.close();
                     bw.close();
                     fw.close();
@@ -55,6 +53,8 @@ public class CommandHandler implements Runnable {
                 }
             }
 
+            //Temp file is created. Every line except the file that we want to delete is added to tempfile.
+            //TempFile is then converted to Database.csv
             if(command.equals("Delete")) {
                 File tempFile = new File("TempCsv.csv");
 
@@ -67,7 +67,6 @@ public class CommandHandler implements Runnable {
                 while((currentLine = reader.readLine()) != null) {
                     // trim newline when comparing with lineToRemove
                     String trimmedLine = currentLine.trim();
-                    System.out.println(trimmedLine);
                     if(trimmedLine.equals(lineToRemove)) continue;
                     writer.write(currentLine + System.getProperty("line.separator"));
                 }

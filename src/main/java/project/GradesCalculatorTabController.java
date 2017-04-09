@@ -1,17 +1,15 @@
 package project;
 
-import javafx.collections.FXCollections;
-import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
-import javafx.fxml.FXMLLoader;
 import javafx.scene.control.*;
 import javafx.scene.control.TextField;
 import javafx.scene.control.cell.PropertyValueFactory;
 
 import java.io.*;
-import java.net.Socket;
 import java.text.DecimalFormat;
+
+//This class controls all the operations that happens in the grade calculator tab except creating new tabs
 
 public class GradesCalculatorTabController {
     public String roundMark(float mark) {
@@ -259,7 +257,7 @@ public class GradesCalculatorTabController {
             Float yourMarkInput = Float.parseFloat(yourMarkField.getText());
             CourseItem newCourseItem = new CourseItem(courseNameInput, courseItemInput, worthInput, yourMarkInput);
 
-            //Upload data to Database.csv
+            //Upload data to Database.csv which is located on the server.
             client.submitQuery("Add", courseNameInput+","+courseItemInput+","+worthInput+","+yourMarkInput);
 
             //update labels
@@ -309,26 +307,5 @@ public class GradesCalculatorTabController {
         eighty.setText(roundMark((80-percentOfCourse)/Float.parseFloat(finalExamWorth.getText())));
         ninety.setText(roundMark((90-percentOfCourse)/Float.parseFloat(finalExamWorth.getText())));
         hundred.setText(roundMark((100-percentOfCourse)/Float.parseFloat(finalExamWorth.getText())));
-
-        //Temp file is created. Every line except the file that we want to delete is added to tempfile.
-        //TempFile is then converted to Database.csv
-        //File inputFile = new File("data/Database.csv");
-/*        File tempFile = new File("TempCsv.csv");
-
-        BufferedReader reader = new BufferedReader(new FileReader(file));
-        BufferedWriter writer = new BufferedWriter(new FileWriter(tempFile));
-
-        String lineToRemove = selectedItem.getCourseName()+","+selectedItem.getCourseItem()+","+selectedItem.getWorth()+","+selectedItem.getYourMark();
-        String currentLine;
-
-        while((currentLine = reader.readLine()) != null) {
-            // trim newline when comparing with lineToRemove
-            String trimmedLine = currentLine.trim();
-            if(trimmedLine.equals(lineToRemove)) continue;
-            writer.write(currentLine + System.getProperty("line.separator"));
-        }
-        writer.close();
-        reader.close();
-        boolean successful = tempFile.renameTo(file);*/
     }
 }
