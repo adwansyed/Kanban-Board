@@ -1,5 +1,7 @@
 package project;
 
+
+
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
@@ -11,15 +13,18 @@ import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileReader;
 import java.io.IOException;
+import java.lang.reflect.Array;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 public class DashboardTabController {
 
     @FXML
     private PieChart taskPieChart;
     private HashMap<String, Integer> taskCount = new HashMap<>();
-
+    File todoTaskFile = new File("src/main/resources/data/todoListData.csv");
     @FXML
     private Button taskPieButton;
 
@@ -42,6 +47,7 @@ public class DashboardTabController {
     public void initialize(){
         //read thru the todoList csv file.
         readTask();
+
         //display the pie chart
         initializePieChart();
 
@@ -52,21 +58,23 @@ public class DashboardTabController {
         for(Map.Entry<String, Integer> entry: taskCount.entrySet()) {
             pieChartData.add(new PieChart.Data(entry.getKey(),entry.getValue()));
         }
+        //pieChartData.mode.setStyle("-fx-pie-color:" + m.group());
         taskPieChart.setData(pieChartData);
 
     }
 
 
     public void readTask(){
-
-        File todoTaskFile = new File("src/main/resources/data/todoListData.csv");
         try {
             FileReader reader = new FileReader(todoTaskFile);
             BufferedReader in = new BufferedReader(reader);
 
             int columnIndex = 0;
+
             String line;
+            String rgb;
             int count = 0;
+            Pattern RGB_PATTERN = Pattern.compile("rgb\\((\\d{1,3}),(\\d{1,3}),(\\d{1,3})\\)");
             while ((line = in.readLine()) != null) {
                 if (count != 0) {//count == 0 means the first line, we skip the first line by skipping the if statement next
                     if (line.trim().length() != 0) {
@@ -78,17 +86,18 @@ public class DashboardTabController {
                             taskCount.put(dataFields[columnIndex], oldCount + 1);
                         }
                     }
-
+                    Matcher m = RGB_PATTERN.matcher(line);
+                    if (m.find()) {
+                        System.out.println(m.group());
+                    }
                 }
                 count++;
             }
-
 
         } catch (IOException e) {
             e.printStackTrace();
         }
     }
-
 
     private String toRgbString(Color c) {
         return "rgb(" + to255Int(c.getRed()) + "," + to255Int(c.getGreen()) + "," + to255Int(c.getBlue()) + ")";
