@@ -2,9 +2,10 @@ package project;
 
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
+import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.chart.PieChart;
-
+import javafx.scene.control.Button;
 import java.awt.*;
 import java.io.BufferedReader;
 import java.io.File;
@@ -19,9 +20,31 @@ public class DashboardTabController {
     private PieChart taskPieChart;
     private HashMap<String, Integer> taskCount = new HashMap<>();
 
+    @FXML
+    private Button taskPieButton;
+
+    @FXML
+    private Button buttonClear;
+
+    @FXML
+    void handleButtonClearAction(ActionEvent event) {
+        ObservableList<PieChart.Data> pieChartData = FXCollections.observableArrayList();
+        taskPieChart.setTitle("");
+        taskPieChart.setData(pieChartData);
+
+    }
+
+    @FXML
+    void handleButtonTaskAction(ActionEvent event) {
+        initialize();
+    }
+
     public void initialize(){
+        //read thru the todoList csv file.
         readTask();
+        //display the pie chart
         initializePieChart();
+
     }
 
     private void initializePieChart() {
@@ -30,11 +53,12 @@ public class DashboardTabController {
             pieChartData.add(new PieChart.Data(entry.getKey(),entry.getValue()));
         }
         taskPieChart.setData(pieChartData);
+
     }
 
-    private void readTask(){
-//        URL url = getClass().getResource
-//                ("src/main/resources/data/todoListData.csv");
+
+    public void readTask(){
+
         File todoTaskFile = new File("src/main/resources/data/todoListData.csv");
         try {
             FileReader reader = new FileReader(todoTaskFile);
@@ -42,28 +66,29 @@ public class DashboardTabController {
 
             int columnIndex = 0;
             String line;
-
+            int count = 0;
             while ((line = in.readLine()) != null) {
-                if (line.trim().length() != 0) {
-                    String[] dataFields = line.split(",");
-                    if (!taskCount.containsKey(dataFields[columnIndex])) {
-                        taskCount.put(dataFields[columnIndex], 1);
-                    } else {
-                        int oldCount = taskCount.get(dataFields[columnIndex]);
-                        taskCount.put(dataFields[columnIndex],oldCount + 1);
+                if (count != 0) {//count == 0 means the first line, we skip the first line by skipping the if statement next
+                    if (line.trim().length() != 0) {
+                        String[] dataFields = line.split(",");
+                        if (!taskCount.containsKey(dataFields[columnIndex])) {
+                            taskCount.put(dataFields[columnIndex], 1);
+                        } else {
+                            int oldCount = taskCount.get(dataFields[columnIndex]);
+                            taskCount.put(dataFields[columnIndex], oldCount + 1);
+                        }
                     }
-                }
 
+                }
+                count++;
             }
 
-/*            for (Map.Entry<String,Integer> entry: taskCount.entrySet()) {
-                System.out.println(entry.getKey() + ": " + entry.getValue());
-            }*/
 
         } catch (IOException e) {
             e.printStackTrace();
         }
     }
+
 
     private String toRgbString(Color c) {
         return "rgb(" + to255Int(c.getRed()) + "," + to255Int(c.getGreen()) + "," + to255Int(c.getBlue()) + ")";
@@ -74,5 +99,6 @@ public class DashboardTabController {
         return (int) (d*255);
     }
 }
+
 
 
