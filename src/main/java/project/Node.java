@@ -2,7 +2,7 @@ package project;
 
 
 /**
- * Created by andrew on 11/03/17.
+ * Author(s): Adwan Syed, Andrew Selvarajah, Ahmed Naeem, Yi Guo
  */
 public class Node {
     private String first;

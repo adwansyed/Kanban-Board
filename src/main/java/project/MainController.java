@@ -5,6 +5,10 @@ import javafx.fxml.FXML;
 import javafx.scene.control.MenuItem;
 import javafx.scene.input.KeyCombination;
 
+/**
+ * Author(s): Adwan Syed, Andrew Selvarajah, Ahmed Naeem, Yi Guo
+ */
+
 public class MainController {
     @FXML
     private MenuItem exit;

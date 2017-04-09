@@ -6,6 +6,10 @@ import javafx.collections.ObservableList;
 import java.io.*;
 import java.net.Socket;
 
+/**
+ * Author(s): Adwan Syed, Andrew Selvarajah, Ahmed Naeem, Yi Guo
+ */
+
 //This is the client class where all commands are sent to the server.
 
 public class Client {

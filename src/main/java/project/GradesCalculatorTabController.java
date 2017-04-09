@@ -8,7 +8,9 @@ import javafx.scene.control.cell.PropertyValueFactory;
 
 import java.io.*;
 import java.text.DecimalFormat;
-
+/**
+ * Author(s): Adwan Syed, Andrew Selvarajah, Ahmed Naeem, Yi Guo
+ */
 //This class controls all the operations that happens in the grade calculator tab except creating new tabs
 
 public class GradesCalculatorTabController {

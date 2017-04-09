@@ -1,5 +1,8 @@
 package project;
 
+/**
+ * Author(s): Adwan Syed, Andrew Selvarajah, Ahmed Naeem, Yi Guo
+ */
 public class CourseItem {
 
     private String courseItem;

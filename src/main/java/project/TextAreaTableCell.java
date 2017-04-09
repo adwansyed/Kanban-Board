@@ -11,7 +11,9 @@ import javafx.util.Callback;
 import javafx.util.StringConverter;
 import javafx.util.converter.DefaultStringConverter;
 
-
+/**
+ * Author(s): Adwan Syed, Andrew Selvarajah, Ahmed Naeem, Yi Guo
+ */
 //took this class from
 //https://gist.github.com/eckig/30abf0d7d51b7756c2e7
 

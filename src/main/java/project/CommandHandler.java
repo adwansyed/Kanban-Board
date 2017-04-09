@@ -3,6 +3,9 @@ package project;
 import java.io.*;
 import java.net.Socket;
 
+/**
+ * Author(s): Adwan Syed, Andrew Selvarajah, Ahmed Naeem, Yi Guo
+ */
 /*
     The CommandHandler takes care of the client commands in the run method. Each command is given a separate thread.
  */
