@@ -251,7 +251,7 @@ public class GradesCalculatorTabController {
 
     @FXML
     public void addItem(ActionEvent actionEvent) throws IOException {
-        if ((courseItemField.getText() != null) && (worthField.getText() != null) && (yourMarkField.getText() != null)) {
+        if ((courseItemField.getText() != null && !courseItem.getText().isEmpty()) && (worthField.getText() != null && !worthField.getText().isEmpty()) && (yourMarkField.getText() != null && !yourMarkField.getText().isEmpty())) {
             //get data from input fields
             String courseNameInput = courseNameField.getText().trim();
             String courseItemInput = courseItemField.getText();
