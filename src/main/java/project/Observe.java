@@ -4,7 +4,8 @@ import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 
 /**
- * Created by andrew on 08/04/17.
+ * Author(s): Adwan Syed, Andrew Selvarajah, Ahmed Naeem, Yi Guo
+ *  this class acts as a Global Observable list for TableViewTextArea
  */
 public class Observe {
 
