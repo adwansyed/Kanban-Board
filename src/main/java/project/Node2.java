@@ -1,7 +1,8 @@
 package project;
 
 /**
- * Created by andrew on 07/04/17.
+ * Author(s): Adwan Syed, Andrew Selvarajah, Ahmed Naeem, Yi Guo
+ *this class saves the day and text for always changing textAreas
  */
 public class Node2 {
     private String text;
@@ -11,17 +12,7 @@ public class Node2 {
     public Node2(String date, String text){
         this.date = date;
         this.text = text;
-/*        int counter2 = 0;
-        strArray = text.split(" ");
-        for (int counter = 0; counter < strArray.length; counter++) {
-            //System.out.println(strArray[counter]+",");
-            counter2++;
-        }
-        date = Integer.parseInt(strArray[0]);
-        if(counter2> 1) {
-          text = strArray[1];
-        }
-        //System.out.println(date);*/
+
     }
 
     public String getText() {
