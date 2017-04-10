@@ -49,4 +49,17 @@ gradle run
 gradle jar
 java -jar build/libs/SystemsIntegrationProject-1.0.jar
 ```
+#### Calendar Instructions
+To open a new month:
+```
+-Pick a date on the date picker
+-Click the new button
+```
+To edit on the table:
+
+```
+-double click cell to edit
+-edit cell
+-press SHIFT + ENTER to finish editing
+```
 
