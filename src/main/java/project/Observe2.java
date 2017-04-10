@@ -4,7 +4,7 @@ package project;
 /**
  * Author(s): Adwan Syed, Andrew Selvarajah, Ahmed Naeem, Yi Guo
  */
-public class Node {
+public class Observe2 {
     private String first;
     private String second;
     private String third;
@@ -12,8 +12,9 @@ public class Node {
     private String fifth;
     private String sixth;
     private String seventh;
+    private int id;
 
-    public Node( String first, String second, String third, String fourth, String fifth, String sixth, String seventh){
+    public Observe2( String first, String second, String third, String fourth, String fifth, String sixth, String seventh, int id){
         this.first = first;
         this.second = second;
         this.third = third;
@@ -21,6 +22,7 @@ public class Node {
         this.fifth = fifth;
         this.sixth = sixth;
         this.seventh = seventh;
+        this.id = id;
 
     }
 
@@ -78,5 +80,13 @@ public class Node {
 
     public void setSeventh(String seventh) {
         this.seventh = seventh;
+    }
+
+    public int getId() {
+        return id;
+    }
+
+    public void setId(int id) {
+        this.id = id;
     }
 }

@@ -11,11 +11,15 @@ import javafx.util.Callback;
 import javafx.util.StringConverter;
 import javafx.util.converter.DefaultStringConverter;
 
-
+/**
+ * Author(s): Adwan Syed, Andrew Selvarajah, Ahmed Naeem, Yi Guo
+ */
 //took this class from
 //https://gist.github.com/eckig/30abf0d7d51b7756c2e7
 
+
 public class TextAreaTableCell<S, T> extends TableCell<S, T> {
+
 
     public static <S> Callback<TableColumn<S, String>, TableCell<S, String>> forTableColumn() {
         return forTableColumn(new DefaultStringConverter());
@@ -46,6 +50,7 @@ public class TextAreaTableCell<S, T> extends TableCell<S, T> {
                 }
                 cell.commitEdit(converter.fromString(textArea.getText()));
                 t.consume();
+
             }
         });
         textArea.prefRowCountProperty().bind(Bindings.size(textArea.getParagraphs()));
@@ -53,7 +58,7 @@ public class TextAreaTableCell<S, T> extends TableCell<S, T> {
     }
 
     private void startEdit(final Cell<T> cell, final StringConverter<T> converter) {
-        textArea.setText(getItemText(cell, converter));
+        textArea.setText(getItemText(cell, converter)+ " ");
 
         cell.setText(null);
         cell.setGraphic(textArea);
@@ -81,22 +86,41 @@ public class TextAreaTableCell<S, T> extends TableCell<S, T> {
                 cell.setText(null);
                 cell.setGraphic(textArea);
             } else {
-                cell.setText(getItemText(cell, converter));
+                if(cell.getText() == getItemText(cell, converter)){
+                    cell.setText(getItemText(cell, converter));
+                }
+                else{
+                    cell.setText(getItemText(cell, converter));
+                    CalendarTabController.addList(cell.getText(), cell);
+                }
+
+
+
+
                 cell.setGraphic(null);
             }
         }
     }
 
     private TextArea textArea;
+    private TextAreaTableCell classname;
+    private String rext;
     private ObjectProperty<StringConverter<T>> converter = new SimpleObjectProperty<>(this, "converter");
 
     public TextAreaTableCell() {
         this(null);
     }
 
+    public String getTextes(){
+        return textArea.getText();
+    }
+
     public TextAreaTableCell(StringConverter<T> converter) {
         this.getStyleClass().add("text-area-table-cell");
         setConverter(converter);
+    }
+    public TextAreaTableCell getTextAreaTableCell(){
+        return classname;
     }
 
     public final ObjectProperty<StringConverter<T>> converterProperty() {

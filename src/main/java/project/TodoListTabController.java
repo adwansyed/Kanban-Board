@@ -12,13 +12,12 @@ import javafx.scene.layout.GridPane;
 import javafx.scene.layout.Pane;
 import javafx.scene.paint.Color;
 import javafx.util.Pair;
-
 import java.io.*;
 import java.util.Optional;
 import java.util.Scanner;
 
 /**
- * Created by 100525709 on 3/14/2017.
+ * Author(s): Adwan Syed, Andrew Selvarajah, Ahmed Naeem, Yi Guo
  */
 public class TodoListTabController {
 
@@ -57,12 +56,16 @@ public class TodoListTabController {
                     buffer += " " + col[0]; // update buffer based on word count
                     continue;               // handles "space" characters which act as newline when delimited
                 }
+
+                // parsing and adding strings for correct functionality
+                // ex: rgb(xxx,xxx,xxx)
                 String colour = col[wordCount].substring(1) + "," + col[wordCount + 1] + "," + col[wordCount + 2].substring(0,col[wordCount + 2].length() -1);
                 String paneID = col[wordCount + 3];
                 buffer += " " + col[0];
                 String task = buffer;
                 buffer = "";
 
+                // select which pane to initialize buttons
                 if (paneID.equals("Monday")){ mPane.getChildren().add(initButton(task,colour,col[wordCount + 3])); }
                 if (paneID.equals("Tuesday")){ tPane.getChildren().add(initButton(task,colour,col[wordCount + 3]));}
                 if (paneID.equals("Wednesday")){ wPane.getChildren().add(initButton(task,colour,col[wordCount + 3]));}
@@ -75,6 +78,7 @@ public class TodoListTabController {
 
     }
 
+    // create rgb string from Color input
     private String toRgbString(Color c) {
         return "rgb("
                 + to255Int(c.getRed())
@@ -83,6 +87,7 @@ public class TodoListTabController {
                 + ")";
     }
 
+    // convert to int
     private int to255Int(double d) {
         return (int) (d * 255);
     }
@@ -96,13 +101,16 @@ public class TodoListTabController {
         return (int)Math.sqrt( r * r * .241 + g * g * .691 + b * b * .068);
     }
 
+    // dialog to add tasks
     private void addDialog(Pane pane, String day) {
+        // create new dialog with labels and buttons
         Dialog<Pair<String, String>> addDialog = new Dialog<>();
         addDialog.setTitle("Add Task");
         addDialog.setHeaderText("Enter your task");
         ButtonType logButton = new ButtonType("Add", ButtonBar.ButtonData.OK_DONE);
         addDialog.getDialogPane().getButtonTypes().addAll(logButton, ButtonType.CANCEL);
 
+        // set layout structure for dialog
         GridPane grid = new GridPane();
         grid.setHgap(10);
         grid.setVgap(10);
@@ -118,6 +126,7 @@ public class TodoListTabController {
         grid.add(cp,1,1);
         addDialog.getDialogPane().setContent(grid);
 
+        // highlight color picker as default field to start on
         Platform.runLater(()->cp.requestFocus());
         addDialog.setResultConverter(dialogButton -> {
             if (dialogButton == logButton){
@@ -126,6 +135,7 @@ public class TodoListTabController {
             return null;
         });
 
+        // submit create button request based on task, colour and day
         Optional<Pair<String,String>> result = addDialog.showAndWait();
         result.ifPresent(taskName -> {
             String colour = toRgbString(cp.getValue());
@@ -133,6 +143,7 @@ public class TodoListTabController {
         });
     }
 
+    // called from context menu
     void deleteDialog(Button button){
         // confirmation dialog
         Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
@@ -140,6 +151,7 @@ public class TodoListTabController {
         alert.setHeaderText("You are about to delete this task.");
         alert.setContentText("Are you sure?");
 
+        // delete button from correct pane once confirmed you want to delete
         Optional<ButtonType> result = alert.showAndWait();
         if (result.get() == ButtonType.OK){
             String paneID = button.getParent().getId();
@@ -154,9 +166,12 @@ public class TodoListTabController {
         }
     }
 
+    // makes CSV updates when you delete file using temporary CSV
     private void deleteFromCSV(Button button) {
         File copy = new File("src/main/resources/data/previous.csv");
         String paneID = button.getParent().getId();
+
+        // use paneID to determine which rows to delete
         if (paneID == mPane.getId()){ paneID = "Monday";}
         if (paneID == tPane.getId()){ paneID = "Tuesday";}
         if (paneID == wPane.getId()){ paneID = "Wednesday";}
@@ -198,6 +213,7 @@ public class TodoListTabController {
         }catch( IOException f){ f.printStackTrace(); }
     }
 
+    // event handlers to create button tasks
     @FXML
     void addToMonday(ActionEvent event) {
         String day = "Monday";
@@ -234,14 +250,20 @@ public class TodoListTabController {
         addDialog(sunPane, day);
     }
 
+    // create buttons for tasks
     private Button createButton(String text, String c, String day) {
+        // set font colour based on brightness of button
         String fontColour = " ; -fx-text-fill: black;";
         if (Brightness(c) < 130){
             fontColour = " ; -fx-text-fill: white;";
         }
         Button button = new Button(text);
+
+        // set style for button
         button.setStyle("-fx-background-color: "+ c + fontColour + "-fx-font-weight: bold;");
         button.setMinWidth(120);
+
+        // event handlers for button
         button.setOnDragDetected(e -> {
             Dragboard db = button.startDragAndDrop(TransferMode.MOVE);
             db.setDragView(button.snapshot(null, null));
@@ -251,6 +273,7 @@ public class TodoListTabController {
             draggingButton = button ;
         });
         button.setOnDragDone(e -> draggingButton = null);
+
         // Right click context menu
         ContextMenu contextMenu = new ContextMenu();
         MenuItem item1 = new MenuItem("Delete");
@@ -277,7 +300,9 @@ public class TodoListTabController {
         return button ;
     }
 
+    // initialize button
     private Button initButton(String text, String c, String day) {
+        // set font colours based on button brightness
         String fontColour = " ; -fx-text-fill: black;";
         if (Brightness(c) < 130){
             fontColour = " ; -fx-text-fill: white;";
@@ -285,6 +310,9 @@ public class TodoListTabController {
         Button button = new Button(text);
         button.setStyle("-fx-background-color: "+ c + fontColour + "-fx-font-weight: bold;");
         button.setMinWidth(120);
+
+        // event handlers for buttons
+
         button.setOnDragDetected(e -> {
             Dragboard db = button.startDragAndDrop(TransferMode.MOVE);
             db.setDragView(button.snapshot(null, null));
@@ -319,6 +347,7 @@ public class TodoListTabController {
         return button ;
     }
 
+    // add new button task data for later use
     private void appendToCSV(String text, String c, String p) {
         String COMMA_DELIMITER = ",";
         String NEW_LINE_SEPARATOR = "\n";
@@ -334,11 +363,12 @@ public class TodoListTabController {
         }
     }
 
-    private static void copyFile(File source, File dest) throws IOException {
+    // coppy file data
+    private static void copyFile(File src, File dest) throws IOException {
         InputStream is = null;
         OutputStream os = null;
         try {
-            is = new FileInputStream(source);
+            is = new FileInputStream(src);
             os = new FileOutputStream(dest);
             byte[] buffer = new byte[1024];
             int length;
@@ -351,6 +381,7 @@ public class TodoListTabController {
         }
     }
 
+    // enable pane allows dragging
     private void enableDraggingUpdates(Pane pane) {
         pane.setOnDragOver(e -> {
             Dragboard db = e.getDragboard();
@@ -359,6 +390,7 @@ public class TodoListTabController {
             }
         });
 
+        // event handler for when items dragged to pane
         pane.setOnDragDropped(e -> {
             Dragboard db = e.getDragboard();
             if (db.hasContent(buttonFormat)) {
@@ -366,7 +398,7 @@ public class TodoListTabController {
                 pane.getChildren().add(draggingButton);
                 e.setDropCompleted(true);
 
-                //TODO: update CSV
+                // update CSV
                 File copy = new File("src/main/resources/data/previous.csv");
                 try{
                     String NEW_LINE_SEPARATOR = "\n";

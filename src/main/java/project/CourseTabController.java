@@ -1,20 +1,22 @@
 package project;
 
-import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Node;
-import javafx.scene.control.*;
+import javafx.scene.control.Label;
+import javafx.scene.control.Tab;
+import javafx.scene.control.TabPane;
+import javafx.scene.control.TextField;
 import javafx.scene.control.cell.PropertyValueFactory;
 
-import java.io.BufferedReader;
 import java.io.File;
-import java.io.FileReader;
 import java.io.IOException;
-import java.nio.file.Path;
-import java.nio.file.Paths;
+/**
+ * Author(s): Adwan Syed, Andrew Selvarajah, Ahmed Naeem, Yi Guo
+ */
+//This class controls the tabs of the grade calculator tab.
 
 public class CourseTabController {
     private File file = new File("src/main/resources/data/Database.csv");
@@ -73,7 +75,6 @@ public class CourseTabController {
         for(Course c: courses) {
             Tab tab = new Tab(c.getName());
             FXMLLoader loader = new FXMLLoader(getClass().getResource("/fxml/gradeCalculator.fxml"));
-            //loader.load();
             tab.setContent(loader.load());
             tab.setStyle("-fx-background-color: #B0C4DE; ");
             tabPane.getTabs().add(tab);
@@ -81,7 +82,6 @@ public class CourseTabController {
             GradesCalculatorTabController controller = loader.getController();
 
             controller.getCourseNameField().setText(c.getName());
-
             controller.getTableView().setItems(c.getMarks());
             controller.getCourseItem().setCellValueFactory(( new PropertyValueFactory<>("courseItem")));
             controller.getWorth().setCellValueFactory(( new PropertyValueFactory<>("worth")));
@@ -106,8 +106,13 @@ public class CourseTabController {
             //courseLabel.textProperty().bind(courseName.getText());
             Tab tab = new Tab(courseName.getText());
             tab.setStyle("-fx-background-color: #B0C4DE;");
+
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/fxml/gradeCalculator.fxml"));
+            tab.setContent(loader.load());
             tabPane.getTabs().add(tab);
-            tab.setContent((Node) FXMLLoader.load(this.getClass().getResource("/fxml/gradeCalculator.fxml")));
+
+            GradesCalculatorTabController controller = loader.getController();
+            controller.getCourseNameField().setText(courseName.getText());
         }
     }
 }

@@ -1,33 +1,23 @@
 package project;
-
-
-
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
-import javafx.event.EventHandler;
 import javafx.fxml.FXML;
-import javafx.scene.control.DatePicker;
+import javafx.scene.control.*;
+import javafx.scene.control.Button;
 import javafx.scene.control.Label;
-import javafx.scene.control.TableColumn;
-import javafx.scene.control.TableView;
+import javafx.scene.control.TextArea;
 import javafx.scene.control.cell.PropertyValueFactory;
-import javafx.scene.control.cell.TextFieldTableCell;
-import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.GridPane;
 import javafx.event.ActionEvent;
-import javafx.scene.control.Button;
-
-import java.awt.*;
-import javafx.scene.text.Font;
-
-
+import javafx.stage.FileChooser;
+import javafx.stage.Stage;
+import java.io.*;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.time.LocalDate;
-import java.time.Month;
 import java.time.YearMonth;
-import java.util.Calendar;
-import java.util.Date;
+import java.time.ZoneId;
+import java.util.*;
 
 
 public class CalendarTabController {
@@ -38,7 +28,7 @@ public class CalendarTabController {
     need to get Data from .csv file and add to calendar
 */
     @FXML
-    private TableColumn<Node, String> tuesColumn;
+    private TableColumn<Observe2, String> tuesColumn;
 
     @FXML
     private GridPane editAreaTop;
@@ -47,28 +37,33 @@ public class CalendarTabController {
     private Label dateLabel;
 
     @FXML
-    private TableColumn<Node, String> monColumn;
+    private TextArea helpLbl;
 
     @FXML
-    private TableColumn<Node, String> wedColumn;
+    private TableColumn<Observe2, String> monColumn;
+
+    @FXML
+    private TableColumn<Observe2, String> wedColumn;
 
     @FXML
     private DatePicker datePicker;
 
     @FXML
-    private TableColumn<Node, String> sunColumn;
+    private TableColumn<Observe2, String> sunColumn;
 
     @FXML
-    private TableColumn<Node, String> satColumn;
+    private TableColumn<Observe2, String> satColumn;
 
     @FXML
-    private TableColumn<Node, String> thursColumn;
+    private TableColumn<Observe2, String> thursColumn;
 
     @FXML
-    private TableView<Node> table;
+    private TableView<Observe2> table;
+
+
 
     @FXML
-    private TableColumn<Node, String> friColumn;
+    private TableColumn<Observe2, String> friColumn;
 
     @FXML
     private Button updateBtn;
@@ -76,27 +71,44 @@ public class CalendarTabController {
     @FXML
     private Button saveBtn;
 
-
     private DateFormat dateFormat;
     private Date date;
     private LocalDate date2;
     private YearMonth yearMonth;
-    private ObservableList<Node> node;
-
-
+    private static ObservableList<Observe2> node;
+    private TextAreaTableCell monArea;
+    private TextAreaTableCell tueArea;
+    private TextAreaTableCell wedArea;
+    private TextAreaTableCell thurArea;
+    private TextAreaTableCell friArea;
+    private TextAreaTableCell satArea;
+    private TextAreaTableCell sunArea;
+    public static Observe ob;
+    private String dateStr;
 
     //Sets the calendar to empty cells and for the current date
     public void initialize() {
-
         node = FXCollections.observableArrayList();
 
-        TextAreaTableCell tatc = new TextAreaTableCell();
+        monArea = new TextAreaTableCell();
+        tueArea = new TextAreaTableCell();
+        wedArea = new TextAreaTableCell();
+        thurArea = new TextAreaTableCell();
+        friArea = new TextAreaTableCell();
+        satArea = new TextAreaTableCell();
+        sunArea = new TextAreaTableCell();
+        helpLbl.setText("To open a new month:" + "\tTo edit cell:\n" +
+                "Step 1: pick a date " + "\t        Step 1: double click cell \n" +
+                "Step 2: click new" + "\t        Step 2: edit cell \n" +
+                "                     \t                Step 3: press SHIFT + ENTER to lock changes");
+        helpLbl.setVisible(true);
+        helpLbl.setEditable(false);
 
 
         date = new Date();
+        LocalDate dates = date.toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
         dateFormat = new SimpleDateFormat("dd/MM/yyyy");
-        datePicker.setPromptText(dateFormat.format(date));
-        System.out.println(dateFormat.format(date).toString());
+        datePicker.setValue(dates);
 
         dateLabel.setText("Date: " + dateFormat.format(date).toString());
 
@@ -104,45 +116,36 @@ public class CalendarTabController {
         table.setFixedCellSize(100);
         table.setEditable(true);
         table.getSelectionModel().setCellSelectionEnabled(true);
+        table.getSelectionModel().getSelectedCells();
 
 
 
 
-        sunColumn.setCellValueFactory(new PropertyValueFactory<Node,String>("first"));
-        //   sunColumn.setCellFactory(TextAreaTableCell.forTableColumn());
-        sunColumn.setCellFactory(TextAreaTableCell.forTableColumn());
-       /* sunColumn.setOnEditCommit(
-                new EventHandler<TableColumn.CellEditEvent<Node, String>>() {
-                    @Override
-                    public void handle(TableColumn.CellEditEvent<Node, String> t) {
-                        ((Node) t.getTableView().getItems().get(
-                                t.getTablePosition().getRow())
-                        ).setFirst(t.getNewValue());
-                    }
-                }
-        );*/
+
+
+        sunColumn.setCellValueFactory(new PropertyValueFactory<Observe2,String>("first"));
+        sunColumn.setCellFactory(sunArea.forTableColumn());
 
 
 
+        monColumn.setCellValueFactory(new PropertyValueFactory< Observe2, String>("second"));
+        monColumn.setCellFactory(monArea.forTableColumn());
 
-        monColumn.setCellValueFactory(new PropertyValueFactory< Node, String>("second"));
-        monColumn.setCellFactory(TextAreaTableCell.forTableColumn());
 
+        tuesColumn.setCellValueFactory(new PropertyValueFactory<Observe2,String>("third"));
+        tuesColumn.setCellFactory(tueArea.forTableColumn());
 
-        tuesColumn.setCellValueFactory(new PropertyValueFactory<Node,String>("third"));
-        tuesColumn.setCellFactory(TextAreaTableCell.forTableColumn());
+        wedColumn.setCellValueFactory(new PropertyValueFactory<Observe2,String>("fourth"));
+        wedColumn.setCellFactory(wedArea.forTableColumn());
 
-        wedColumn.setCellValueFactory(new PropertyValueFactory<Node,String>("fourth"));
-        wedColumn.setCellFactory(TextAreaTableCell.forTableColumn());
+        thursColumn.setCellValueFactory(new PropertyValueFactory<Observe2,String>("fifth"));
+        thursColumn.setCellFactory(thurArea.forTableColumn());
 
-        thursColumn.setCellValueFactory(new PropertyValueFactory<Node,String>("fifth"));
-        thursColumn.setCellFactory(TextAreaTableCell.forTableColumn());
+        friColumn.setCellValueFactory(new PropertyValueFactory<Observe2,String>("sixth"));
+        friColumn.setCellFactory(friArea.forTableColumn());
 
-        friColumn.setCellValueFactory(new PropertyValueFactory<Node,String>("sixth"));
-        friColumn.setCellFactory(TextAreaTableCell.forTableColumn());
-
-        satColumn.setCellValueFactory(new PropertyValueFactory<Node,String>("seventh"));
-        satColumn.setCellFactory(TextAreaTableCell.forTableColumn());
+        satColumn.setCellValueFactory(new PropertyValueFactory<Observe2,String>("seventh"));
+        satColumn.setCellFactory(satArea.forTableColumn());
 
         table.setItems(node);
 
@@ -153,12 +156,17 @@ public class CalendarTabController {
     @FXML
     void updater(ActionEvent event) {
 
-
-        int[] nums = new int[7];
+        String[] nums = new String[7];
         int prevDays;
         for ( int i = 0; i<table.getItems().size(); i++) {
             table.getItems().clear();
         }
+        ob = new Observe();
+        LocalDate dateName = datePicker.getValue();
+        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM");
+        Date tempDate = java.sql.Date.valueOf(dateName);
+        dateStr = sdf.format(tempDate).toString();
+
 
         date2 = datePicker.getValue();
         int days = checkDays(date2.getMonthValue(), date2.getYear());
@@ -172,26 +180,23 @@ public class CalendarTabController {
         month = month-1;
         int loopCheckpoint = -1;
 
-
-
-
         Calendar cal=Calendar.getInstance();
         cal.set(Calendar.DATE,1);
         cal.set(Calendar.MONTH,month);
         cal.set(Calendar.YEAR,date2.getYear());
 
-
-        SimpleDateFormat sdf= new SimpleDateFormat("EEEE");//formats the day into a string for the specific day
+        sdf= new SimpleDateFormat("EEEE");//formats the day into a string for the specific day
         String start = sdf.format(cal.getTime());
 
 //formats calender numbers based on starting day
         if(start.equals("Sunday")){
             int counter2 = 1;
             int counter = 1;
+            int week = 1;
             for (int x = 0; x < 6;x++){
                 for (int i = 0; i < 7;i++){
                     if(counter < days+ 1) {
-                        nums[i] = counter;
+                        nums[i] = Integer.toString(counter);
                         counter++;
                     }
                     else{
@@ -203,33 +208,32 @@ public class CalendarTabController {
                 if(loopCheckpoint != -1) {
 
                     for (int i = loopCheckpoint; i < 7;i++){
-                        nums[i] = counter2;
+                        nums[i] = "+"+Integer.toString(counter2);
                         counter2++;
-
                     }
-
                 }
-                node.add(new Node(Integer.toString(nums[0]), Integer.toString(nums[1]),
-                        Integer.toString(nums[2]), Integer.toString(nums[3]), Integer.toString(nums[4]),
-                        Integer.toString(nums[5]), Integer.toString(nums[6])));
+                node.add(new Observe2(nums[0] + " .", nums[1] + " .",
+                        nums[2] + " .", nums[3] + " .", nums[4] + " .",
+                        nums[5] + " .", nums[6] + " .", week));
+                week++;
             }
             table.setItems(node);
-
         }
         else if(start.equals("Monday")){
             int counter = 1;
             int counter2 = 1;
+            int week = 1;
             int dayChecks = 0;//change this according to starting day
             int backCounter = prevDays;
             for (int x = 0; x < 6;x++){
                 for (int i = 0; i < 7;i++){
                     if(counter < days+ 1) {
                         if(dayChecks < 1) {
-                            nums[i] = backCounter;//chenge this code according to the starting day
+                            nums[i] = "-"+Integer.toString(backCounter);//chenge this code according to the starting day
                             dayChecks++;
                         }
                         else{
-                            nums[i] = counter;
+                            nums[i] = Integer.toString(counter);
                             counter++;
                         }
 
@@ -243,35 +247,35 @@ public class CalendarTabController {
                 if(loopCheckpoint != -1) {
 
                     for (int i = loopCheckpoint; i < 7;i++){
-                        nums[i] = counter2;
+                        nums[i] = "+"+Integer.toString(counter2);
                         counter2++;
 
                     }
 
                 }
-                node.add(new Node(Integer.toString(nums[0]), Integer.toString(nums[1]),
-                        Integer.toString(nums[2]), Integer.toString(nums[3]), Integer.toString(nums[4]),
-                        Integer.toString(nums[5]), Integer.toString(nums[6])));
+                node.add(new Observe2(nums[0] + " .", nums[1] + " .",
+                        nums[2] + " .", nums[3] + " .", nums[4] + " .",
+                        nums[5] + " .", nums[6] + " .", week));
+                week++;
             }
             table.setItems(node);
-
-
         }
         else if(start.equals("Tuesday")){
             int counter = 1;
             int counter2 = 1;
             int dayChecks = 0;
+            int week = 1;
             int backCounter = prevDays-1;//change this according to starting day
             for (int x = 0; x < 6;x++){
                 for (int i = 0; i < 7;i++){
                     if(counter < days+ 1) {
                         if(dayChecks < 2) {//change this code according to the starting day
-                            nums[i] = backCounter;
+                            nums[i] = "-"+Integer.toString(backCounter);
                             backCounter++;
                             dayChecks++;
                         }
                         else{
-                            nums[i] = counter;
+                            nums[i] = Integer.toString(counter);
                             counter++;
                         }
 
@@ -285,38 +289,37 @@ public class CalendarTabController {
                 if(loopCheckpoint != -1) {
 
                     for (int i = loopCheckpoint; i < 7;i++){
-                        nums[i] = counter2;
+                        nums[i] = "+"+Integer.toString(counter2);
                         counter2++;
 
                     }
 
                 }
-                node.add(new Node(Integer.toString(nums[0]), Integer.toString(nums[1]),
-                        Integer.toString(nums[2]), Integer.toString(nums[3]), Integer.toString(nums[4]),
-                        Integer.toString(nums[5]), Integer.toString(nums[6])));
+                node.add(new Observe2(nums[0] + " .", nums[1] + " .",
+                        nums[2] + " .", nums[3]+ " .", nums[4] + " .",
+                        nums[5] + " .", nums[6] + " .", week));
+                week++;
             }
             table.setItems(node);
-
-
         }
         else if(start.equals("Wednesday")){
             int counter = 1;
             int counter2 = 1;
+            int week = 1;
             int dayChecks = 0;//change this according to starting day
             int backCounter = prevDays-2;
             for (int x = 0; x < 6;x++){
                 for (int i = 0; i < 7;i++){
                     if(counter < days+ 1) {
                         if(dayChecks < 3) {//change this code according to the starting day
-                            nums[i] = backCounter;
+                            nums[i] = "-"+Integer.toString(backCounter);
                             backCounter++;
                             dayChecks++;
                         }
                         else{
-                            nums[i] = counter;
+                            nums[i] = Integer.toString(counter);
                             counter++;
                         }
-
                     }
                     else{
                         loopCheckpoint = i;
@@ -326,35 +329,33 @@ public class CalendarTabController {
                 }
                 if(loopCheckpoint != -1) {
                     for (int i = loopCheckpoint; i < 7;i++){
-                        nums[i] = counter2;
+                        nums[i] = "+"+Integer.toString(counter2);
                         counter2++;
-
                     }
-
                 }
-                node.add(new Node(Integer.toString(nums[0]), Integer.toString(nums[1]),
-                        Integer.toString(nums[2]), Integer.toString(nums[3]), Integer.toString(nums[4]),
-                        Integer.toString(nums[5]), Integer.toString(nums[6])));
+                node.add(new Observe2(nums[0] + " .", nums[1] + " .",
+                        nums[2] + " .", nums[3] + " .", nums[4] + " .",
+                        nums[5] + " .", nums[6] + " .", week));
+                week++;
             }
             table.setItems(node);
-
-
         }
         else if(start.equals("Thursday")){
             int counter = 1;
             int counter2 = 1;
+            int week = 1;
             int dayChecks = 0;//change this according to starting day
             int backCounter = prevDays-3;
             for (int x = 0; x < 6;x++){
                 for (int i = 0; i < 7;i++){
                     if(counter < days+ 1) {
                         if(dayChecks < 4) {//change this code according to the starting day
-                            nums[i] = backCounter;
+                            nums[i] = "-"+Integer.toString(backCounter);
                             backCounter++;
                             dayChecks++;
                         }
                         else{
-                            nums[i] = counter;
+                            nums[i] = Integer.toString(counter);
                             counter++;
                         }
 
@@ -367,34 +368,34 @@ public class CalendarTabController {
                 }
                 if(loopCheckpoint != -1) {
                     for (int i = loopCheckpoint; i < 7;i++){
-                        nums[i] = counter2;
+                        nums[i] = "+"+Integer.toString(counter2);
                         counter2++;
 
                     }
-
                 }
-                node.add(new Node(Integer.toString(nums[0]), Integer.toString(nums[1]),
-                        Integer.toString(nums[2]), Integer.toString(nums[3]), Integer.toString(nums[4]),
-                        Integer.toString(nums[5]), Integer.toString(nums[6])));
+                node.add(new Observe2(nums[0] + " .", nums[1] + " .",
+                        nums[2] + " .", nums[3] + " .", nums[4] + " .",
+                        nums[5] + " .", nums[6] + " .", week));
+                week++;
             }
             table.setItems(node);
-
         }
         else if(start.equals("Friday")){
             int counter = 1;
             int counter2 = 1;
+            int week = 1;
             int dayChecks = 0;//change this according to starting day
             int backCounter = prevDays-4;
             for (int x = 0; x < 6;x++){
                 for (int i = 0; i < 7;i++){
                     if(counter < days+ 1) {
                         if(dayChecks < 5) {//change this code according to the starting day
-                            nums[i] = backCounter;
+                            nums[i] = "-"+Integer.toString(backCounter);
                             backCounter++;
                             dayChecks++;
                         }
                         else{
-                            nums[i] = counter;
+                            nums[i] = Integer.toString(counter);
                             counter++;
                         }
 
@@ -402,20 +403,19 @@ public class CalendarTabController {
                     else{
                         loopCheckpoint = i;
                         break;
-
                     }
                 }
                 if(loopCheckpoint != -1) {
                     for (int i = loopCheckpoint; i < 7;i++){
-                        nums[i] = counter2;
+                        nums[i] = "+"+Integer.toString(counter2);
                         counter2++;
-
                     }
 
                 }
-                node.add(new Node(Integer.toString(nums[0]), Integer.toString(nums[1]),
-                        Integer.toString(nums[2]), Integer.toString(nums[3]), Integer.toString(nums[4]),
-                        Integer.toString(nums[5]), Integer.toString(nums[6])));
+                node.add(new Observe2(nums[0] + " .", nums[1] + " .",
+                        nums[2] + " .", nums[3] + " .", nums[4] + " .",
+                        nums[5] + " .", nums[6] + " .", week));
+                week++;
             }
             table.setItems(node);
 
@@ -423,18 +423,19 @@ public class CalendarTabController {
         else if(start.equals("Saturday")){
             int counter = 1;
             int counter2 = 1;
+            int week = 1;
             int dayChecks = 0;//change this according to starting day
             int backCounter = prevDays-5;
             for (int x = 0; x < 6;x++){
                 for (int i = 0; i < 7;i++){
                     if(counter < days+1) {
                         if(dayChecks < 6) {//change this code according to the starting day
-                            nums[i] = backCounter;
+                            nums[i] = "-"+Integer.toString(backCounter);
                             backCounter++;
                             dayChecks++;
                         }
                         else{
-                            nums[i] = counter;
+                            nums[i] = Integer.toString(counter);
                             counter++;
                         }
 
@@ -447,78 +448,113 @@ public class CalendarTabController {
                 }
                 if(loopCheckpoint != -1) {
                     for (int i = loopCheckpoint; i < 7;i++){
-                        nums[i] = counter2;
+                        nums[i] = "+"+Integer.toString(counter2);
                         counter2++;
 
                     }
 
                 }
-                node.add(new Node(Integer.toString(nums[0]), Integer.toString(nums[1]),
-                        Integer.toString(nums[2]), Integer.toString(nums[3]), Integer.toString(nums[4]),
-                        Integer.toString(nums[5]), Integer.toString(nums[6])));
+                node.add(new Observe2(nums[0] + " .", nums[1] + " .",
+                        nums[2] + " .", nums[3] + " .", nums[4] + " .",
+                        nums[5] + " .", nums[6] + " .", week));
+                week++;
             }
             table.setItems(node);
 
         }
-
-
-
-
-
     }
 
     //Saves the date from the calendar to a file
     @FXML
     void saveMonth(ActionEvent event) {
-        int counter = 0;
-        TableColumn<Node, String> finalSunColumn = sunColumn;
-        TableColumn<Node, String> finalMonColumn = monColumn;
-        TableColumn<Node, String> finalTuesColumn = tuesColumn;
-        TableColumn<Node, String> finalWedColumn = wedColumn;
-        TableColumn<Node, String> finalThursColumn = thursColumn;
-        TableColumn<Node, String> finalFriColumn = friColumn;
-        TableColumn<Node, String> finalSatColumn = satColumn;
-        ;
 
-        String[] sunTemp = new String[table.getItems().size()];
-        String[] monTemp = new String[table.getItems().size()];
-        String[] tuesTemp = new String[table.getItems().size()];
-        String[] wedTemp =new String[table.getItems().size()];
-        String[] thursTemp =new String[table.getItems().size()];
-        String[] friTemp =new String[table.getItems().size()];
-        String[] satTemp =new String[table.getItems().size()];
-        for(Node item : table.getItems()){
-            sunTemp[counter] = finalSunColumn.getCellObservableValue(item).getValue();
-            monTemp[counter] = finalMonColumn.getCellObservableValue(item).getValue();
-            tuesTemp[counter] = finalTuesColumn.getCellObservableValue(item).getValue();
-            wedTemp[counter] = finalWedColumn.getCellObservableValue(item).getValue();
-            thursTemp[counter] = finalThursColumn.getCellObservableValue(item).getValue();
-            friTemp[counter] = finalFriColumn.getCellObservableValue(item).getValue();
-            satTemp[counter] = finalSatColumn.getCellObservableValue(item).getValue();
-            System.out.println(sunTemp[counter]+" "+monTemp[counter]+" "+tuesTemp[counter]+" "+
-                    wedTemp[counter]+" "+thursTemp[counter]+" "+friTemp[counter]+" "+satTemp[counter]);
-            counter++;
+        ObservableList<Node2> tempList = ob.getObserve();
+
+        String NEW_LINE_SEPARATOR = "\n";
+        int count = 0;
+        File file = new File("src/main/resources/data/Calender/" + dateStr + ".csv");
+        String fileName2 = file.getAbsolutePath();
+        try{
+            FileWriter fileWriter = new FileWriter(fileName2);
+            for(Node2 f : tempList){
+                if(count == 7){
+                    fileWriter.append('/');
+                    fileWriter.append(NEW_LINE_SEPARATOR);
+                    count = 0;
+                }
+                fileWriter.append(","+f.getDate() + " ." + f.getText());
+                fileWriter.append(NEW_LINE_SEPARATOR);
+                count++;
+            }
+            fileWriter.append('/');
+            fileWriter.close();
+        }catch (FileNotFoundException e) {
+            e.printStackTrace();
+        } catch (IOException e) {
+            e.printStackTrace();
         }
 
     }
     @FXML
-    public void clickItem(MouseEvent event)
-    {
-        if (event.getClickCount() == 2) //Checking double click
-        {
-            System.out.println(table.getSelectionModel().getSelectedItem().getFirst());
-            System.out.println(table.getSelectionModel().getSelectedItem().getSecond());
-            System.out.println(table.getSelectionModel().getSelectedItem().getThird());
-            System.out.println(table.getSelectionModel().getSelectedItem().getFourth());
-            System.out.println(table.getSelectionModel().getSelectedItem().getFifth());
-            System.out.println(table.getSelectionModel().getSelectedItem().getSixth());
-            System.out.println(table.getSelectionModel().getSelectedItem().getSeventh());
+    void openMonth(ActionEvent event) {
+        ob = new Observe();
+        for ( int i = 0; i<table.getItems().size(); i++) {
+            table.getItems().clear();
         }
+;
+        FileChooser fileChooser = new FileChooser();
+        fileChooser.setInitialDirectory(new File("src/main/resources/data/Calender/"));
+        File file = fileChooser.showOpenDialog(new Stage());
+        dateStr = file.getName();
+        String line;
+        String[] tempCarry;
+        int counter = -1;
+        boolean strCheck;
+        int week = 1;
+        String[] col = new String[7];
+        try {
+            Scanner scanner = new Scanner(file);
+            BufferedReader br = new BufferedReader(new FileReader(file));
+            while (scanner.hasNext()) {
+                line = br.readLine();
+                if(line.equals("/")){
+                    node.add(new Observe2(col[0], col[1], col[2], col[3], col[4], col[5], col[6], week));
+                    week++;
+                    counter = -1;
+                }
+                else {
+                    tempCarry = line.split("");
+                    if(tempCarry[0].equals(",")){
+                        strCheck = false;
+                        counter++;
+                        line =line.replaceFirst(",", line);
+                        line = "";
+                        for(int x = 1; x < tempCarry.length;x++){
+                            line = line + tempCarry[x];
+                        }
+                    }
+                    else{
+                        strCheck = true;
+                    }
+                    if(strCheck== true){
+                        col[counter] = col[counter] + "\n"+ line;
+                    }
+                    else{
+                        col[counter] = line;
+                    }
+                }
+                scanner.nextLine();
+
+            }
+        }catch (FileNotFoundException e) {
+            e.printStackTrace();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        table.setItems(node);
     }
     //calculates the number of days in the specified month and year
-    public int checkDays(int month, int year){
-
-
+    private int checkDays(int month, int year){
         int daysInMonth;
         int isLeapYear;
 
@@ -527,9 +563,7 @@ public class CalendarTabController {
         }
         else{
             isLeapYear = 0;
-
         }
-
         if (month == 2) {
             daysInMonth = 28 + isLeapYear;
         } else {
@@ -537,6 +571,146 @@ public class CalendarTabController {
         }
         return daysInMonth;
     }
+
+    public static void addList(String text, Cell cell){
+        ObservableList<Node2> tempList = ob.getObserve();
+        String[] strArray;
+        String tempDate;
+        String colName = " ";
+        boolean check = true;
+        strArray = text.split(" ");
+        tempDate = strArray[0];
+
+        if (strArray.length > 2){
+            text = strArray[2];
+            for (int counter = 3; counter < strArray.length;counter++){
+                text = text + " " + strArray[counter];
+            }
+        }
+        else{
+            text = " ";
+        }
+        if(tempList.isEmpty()) {
+            tempList.add(new Node2(tempDate, text));
+            check = false;
+        }
+        else{
+            outerloop:
+            for (Node2 f : tempList) {
+                if ((tempDate.equals(f.getDate()))) {
+
+                    for(Observe2 t : node) {
+                        if((tempDate+" .").equals(t.getFirst())) {
+                            colName = "sunColumn";
+                            if(colName.equals(cell.getId())){
+                                f.setText(text);
+                                check = false;
+                                break outerloop;
+                            }
+                            else{
+                                colName = " ";
+                            }
+                        }
+                        else{
+                            colName = " ";
+                        }
+                        if((tempDate+" .").equals(t.getSecond())) {
+                            colName = "monColumn";
+                            if(colName.equals(cell.getId())){
+                                f.setText(text);
+                                check = false;
+                                break outerloop;
+                            }
+                            else{
+                                colName = " ";
+                            }
+                        }
+                        else{
+                            colName = " ";
+                        }
+                        if((tempDate+" .").equals(t.getThird())) {
+                            colName = "tuesColumn";
+                            if(colName.equals(cell.getId())){
+                                f.setText(text);
+                                check = false;
+                                break outerloop;
+                            }
+                            else{
+                                colName = " ";
+                            }
+                        }
+                        else{
+                            colName = " ";
+                        }
+                        if((tempDate+" .").equals(t.getFourth())) {
+                            colName = "wedColumn";
+                            if(colName.equals(cell.getId())){
+                                f.setText(text);
+                                check = false;
+                                break outerloop;
+                            }
+                            else{
+                                colName = " ";
+                            }
+                        }
+                        else{
+                            colName = " ";
+                        }
+                        if((tempDate+" .").equals(t.getFifth())) {
+                            colName = "thursColumn";
+                            if(colName.equals(cell.getId())){
+                                f.setText(text);
+                                check = false;
+                                break outerloop;
+                            }
+                            else{
+                                colName = " ";
+                            }
+                        }
+                        else{
+                            colName = " ";
+                        }
+                        if((tempDate+" .").equals(t.getSixth())) {
+                            colName = "friColumn";
+                            if(colName.equals(cell.getId())){
+                                f.setText(text);
+                                check = false;
+                                break outerloop;
+                            }
+                            else{
+                                colName = " ";
+                            }
+                        }
+                        else{
+                            colName = " ";
+                        }
+                        if((tempDate+" .").equals(t.getSeventh())) {
+                            colName = "satColumn";
+                            if(colName.equals(cell.getId())){
+                                f.setText(text);
+                                check = false;
+                                break outerloop;
+                            }
+                            else{
+                                colName = " ";
+                            }
+                        }
+                        else{
+                            colName = " ";
+                        }
+                    }
+                }
+            }
+        }
+        if(check == true) {
+            tempList.add(new Node2(tempDate, text));
+        }
+    }
+
+
+
+
+
 
 
 

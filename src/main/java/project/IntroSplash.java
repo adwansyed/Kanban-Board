@@ -6,7 +6,7 @@ import java.io.File;
 import java.io.IOException;
 
 /**
- * Created by 100518792 on 4/2/2017.
+ * Author(s): Adwan Syed, Andrew Selvarajah, Ahmed Naeem, Yi Guo
  */
 public class IntroSplash extends JWindow {
     private int duration;

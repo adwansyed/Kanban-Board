@@ -2,8 +2,10 @@ package project;
 
 import java.io.IOException;
 import java.net.ServerSocket;
-import java.net.Socket;
 
+/**
+ * Author(s): Adwan Syed, Andrew Selvarajah, Ahmed Naeem, Yi Guo
+ */
 /*
     A server is started once this file is executed. A ClientConnectionHandler is created which is an infinite loop
     that listens for further sockets looking to connect.
