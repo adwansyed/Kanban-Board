@@ -20,13 +20,14 @@ import java.time.ZoneId;
 import java.util.*;
 
 
-public class CalendarTabController {
+/**
+ * Author(s): Adwan Syed, Andrew Selvarajah, Ahmed Naeem, Yi Guo
+ *
+ */
 
-    /*
-    Need to figure out how to get Cell String Values
-    Figure out how to save them in a specific Format
-    need to get Data from .csv file and add to calendar
-*/
+
+
+public class CalendarTabController {
     @FXML
     private TableColumn<Observe2, String> tuesColumn;
 
@@ -97,14 +98,11 @@ public class CalendarTabController {
         friArea = new TextAreaTableCell();
         satArea = new TextAreaTableCell();
         sunArea = new TextAreaTableCell();
-        helpLbl.setText("To open a new month:" + "\tTo edit cell:\n" +
-                "Step 1: pick a date " + "\t        Step 1: double click cell \n" +
-                "Step 2: click new" + "\t        Step 2: edit cell \n" +
-                "                     \t                Step 3: press SHIFT + ENTER to lock changes");
+
         helpLbl.setVisible(true);
         helpLbl.setEditable(false);
 
-
+        //sets DatePicker inital date to today
         date = new Date();
         LocalDate dates = date.toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
         dateFormat = new SimpleDateFormat("dd/MM/yyyy");
@@ -118,19 +116,13 @@ public class CalendarTabController {
         table.getSelectionModel().setCellSelectionEnabled(true);
         table.getSelectionModel().getSelectedCells();
 
-
-
-
-
+        //inializes property Values to columns and set Cells to textAreas
 
         sunColumn.setCellValueFactory(new PropertyValueFactory<Observe2,String>("first"));
         sunColumn.setCellFactory(sunArea.forTableColumn());
 
-
-
         monColumn.setCellValueFactory(new PropertyValueFactory< Observe2, String>("second"));
         monColumn.setCellFactory(monArea.forTableColumn());
-
 
         tuesColumn.setCellValueFactory(new PropertyValueFactory<Observe2,String>("third"));
         tuesColumn.setCellFactory(tueArea.forTableColumn());
@@ -167,7 +159,7 @@ public class CalendarTabController {
         Date tempDate = java.sql.Date.valueOf(dateName);
         dateStr = sdf.format(tempDate).toString();
 
-
+        //checks starting and ending days
         date2 = datePicker.getValue();
         int days = checkDays(date2.getMonthValue(), date2.getYear());
         if(date2.getMonthValue() == 1) {
@@ -188,7 +180,7 @@ public class CalendarTabController {
         sdf= new SimpleDateFormat("EEEE");//formats the day into a string for the specific day
         String start = sdf.format(cal.getTime());
 
-//formats calender numbers based on starting day
+        //formats calender numbers based on starting day
         if(start.equals("Sunday")){
             int counter2 = 1;
             int counter = 1;
@@ -464,7 +456,7 @@ public class CalendarTabController {
         }
     }
 
-    //Saves the date from the calendar to a file
+    //Saves the date from the calendar to a specified filename with month and year
     @FXML
     void saveMonth(ActionEvent event) {
 
@@ -495,6 +487,7 @@ public class CalendarTabController {
         }
 
     }
+     //Reads file and displays month
     @FXML
     void openMonth(ActionEvent event) {
         ob = new Observe();
@@ -512,6 +505,7 @@ public class CalendarTabController {
         boolean strCheck;
         int week = 1;
         String[] col = new String[7];
+        //reads file according to keys from saveMonth
         try {
             Scanner scanner = new Scanner(file);
             BufferedReader br = new BufferedReader(new FileReader(file));
@@ -571,7 +565,7 @@ public class CalendarTabController {
         }
         return daysInMonth;
     }
-
+    //adds to Observable array whenever a change is made
     public static void addList(String text, Cell cell){
         ObservableList<Node2> tempList = ob.getObserve();
         String[] strArray;
@@ -580,7 +574,7 @@ public class CalendarTabController {
         boolean check = true;
         strArray = text.split(" ");
         tempDate = strArray[0];
-
+         //checks to see if any text with date
         if (strArray.length > 2){
             text = strArray[2];
             for (int counter = 3; counter < strArray.length;counter++){
@@ -594,6 +588,7 @@ public class CalendarTabController {
             tempList.add(new Node2(tempDate, text));
             check = false;
         }
+        //checks if date was previously used else just add new date to calendar
         else{
             outerloop:
             for (Node2 f : tempList) {
