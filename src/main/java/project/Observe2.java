@@ -1,8 +1,8 @@
 package project;
 
-
 /**
  * Author(s): Adwan Syed, Andrew Selvarajah, Ahmed Naeem, Yi Guo
+ * this class stores the dates per week
  */
 public class Observe2 {
     private String first;
