@@ -10,12 +10,15 @@ import javafx.scene.input.KeyCode;
 import javafx.util.Callback;
 import javafx.util.StringConverter;
 import javafx.util.converter.DefaultStringConverter;
-
 /**
  * Author(s): Adwan Syed, Andrew Selvarajah, Ahmed Naeem, Yi Guo
  */
-//took this class from
-//https://gist.github.com/eckig/30abf0d7d51b7756c2e7
+/**
+ took this class from
+https://gist.github.com/eckig/30abf0d7d51b7756c2e7
+ Has been slightly modified for the program specific
+ This class is Used to format and pt textAreas within TableCells
+ */
 
 
 public class TextAreaTableCell<S, T> extends TableCell<S, T> {
@@ -34,6 +37,7 @@ public class TextAreaTableCell<S, T> extends TableCell<S, T> {
                 .toString() : converter.toString(cell.getItem());
     }
 
+    //creates TextAre on Cell and waits on keyPress
     private static <T> TextArea createTextArea(final Cell<T> cell, final StringConverter<T> converter) {
         TextArea textArea = new TextArea(getItemText(cell, converter));
         textArea.setOnKeyReleased(t -> {
@@ -71,7 +75,7 @@ public class TextAreaTableCell<S, T> extends TableCell<S, T> {
         cell.setText(getItemText(cell, converter));
         cell.setGraphic(null);
     }
-
+    //updates Cell one cell has completed editing
     private void updateItem(final Cell<T> cell, final StringConverter<T> converter) {
 
         if (cell.isEmpty()) {
